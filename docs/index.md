@@ -1,39 +1,47 @@
-# Cloudflare 零基础建站指南
+---
+layout: home
 
-把你前面那几篇文章里的核心内容整理成一套真正能落地的教程站。
+hero:
+  name: "slowhong"
+  text: "把想法、知识和经验持续写出来"
+  tagline: "这里记录 AI、建站、效率工具和个人长期写作。先把内容留下来，再慢慢把站做得更完整。"
+  actions:
+    - theme: brand
+      text: 从文章开始
+      link: /posts
+    - theme: alt
+      text: 看建站教程
+      link: /guide/getting-started
+    - theme: alt
+      text: 了解我
+      link: /about
 
-这套方案适合零基础用户，目标只有两个：
+features:
+  - title: 持续写作
+    details: 以 Markdown 为主，把零散想法整理成可以长期积累的文字内容。
+  - title: AI 与工具
+    details: 记录 AI 工具、工作流、自动化和日常效率实践，不只讲概念，尽量讲可落地的方法。
+  - title: 建站与发布
+    details: 用 GitHub 和 Cloudflare Pages 管理内容发布，让个人网站变成长期可维护的内容阵地。
+  - title: 低成本搭建
+    details: 少花钱、少折腾服务器，优先选择适合个人长期维护的方案。
+---
 
-- 用 `Obsidian + Markdown + GitHub + Cloudflare Pages` 搭出自己的个人网站
-- 用 `Cloudflare Worker + 自定义域名` 搭一个轻量网页代理入口
+## 从这里开始
 
-## 你最终会得到什么
+如果你是第一次访问，建议按这个顺序阅读：
 
-- 一个可持续更新的个人网站
-- 一套只写 Markdown 就能发站的工作流
-- 一个可选的 Cloudflare Worker 代理
+1. 先看 [文章索引](/posts)，了解这个站主要写什么。
+2. 如果你也想自己建站，直接看 [从 Markdown 到上线](/guide/getting-started)。
+3. 如果你对网页抓取或代理感兴趣，再看 [Cloudflare Worker 代理](/guide/worker-proxy)。
 
-## 阅读顺序
+## 这个站会长期写什么
 
-1. 先看 [从 Markdown 到上线](/guide/getting-started)
-2. 再看 [Cloudflare Worker 代理](/guide/worker-proxy)
+- AI 工具与使用体验
+- 个人网站与内容发布
+- 效率工具和工作流
+- 一些适合长期积累的文字内容
 
-## 这套方案为什么适合小白
+## 站点说明
 
-- 不用买服务器
-- 不用自己配 Nginx
-- 不用写复杂前端
-- 后续维护主要就是写 Markdown 和 `git push`
-
-## 你需要准备的东西
-
-- `Cloudflare` 账号
-- `GitHub` 账号
-- `Node.js`
-- `Git`
-- `Obsidian` 可选
-- 一个域名，可选但推荐
-
-## 建议顺序
-
-先把网站跑起来，再去绑定域名，最后再加 Worker。这样最稳。
+这个网站目前以文字内容为主，结构会继续迭代。先把内容稳定发出来，再逐步补文章分类、专题页、项目页和更完整的归档系统。
