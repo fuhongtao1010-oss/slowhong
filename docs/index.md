@@ -34,6 +34,7 @@ features:
 1. 先看 [文章索引](/posts)，了解这个站主要写什么。
 2. 如果你也想自己建站，直接看 [从 Markdown 到上线](/guide/getting-started)。
 3. 如果你对网页抓取或代理感兴趣，再看 [Cloudflare Worker 代理](/guide/worker-proxy)。
+4. 如果你想把写作固定成日常流程，看 [持续发布流程](/workflow)。
 
 ## 这个站会长期写什么
 

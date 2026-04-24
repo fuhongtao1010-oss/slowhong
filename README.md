@@ -14,3 +14,19 @@ npm run docs:dev
 ```bash
 npm run docs:build
 ```
+
+## 发布
+
+手动发布：
+
+```bash
+git add .
+git commit -m "update content"
+git push origin main
+```
+
+脚本发布：
+
+```bash
+./publish.sh "update content"
+```
