@@ -1,0 +1,3762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>巴菲特下午茶 · 向奥马哈的老先生请教</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(180deg, #faf6ef 0%, #f5f0e6 100%);
+  color: #1a2332;
+}
+/* Paper grain texture — matches main site */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* Left: main chat area. Fixed to viewport height; DOES NOT scroll itself.
+ * The only scrollable element inside is .messages. */
+.main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;             /* allow flex child to shrink below content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.2rem 1rem 1rem;
+  overflow: hidden;          /* was overflow-y:auto — now .messages scrolls */
+  transition: all 0.3s ease;
+}
+
+.main-inner {
+  width: 100%;
+  max-width: 720px;
+  flex: 1;
+  min-height: 0;             /* KEY: lets .messages' overflow kick in */
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid #e0d5c0;
+}
+.chat-header-left { min-width: 0; }
+h1 {
+  font-size: 1.15rem;
+  color: #B8860B;
+  margin: 0;
+  font-family: 'Noto Serif SC', Georgia, serif;
+  font-weight: 700;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chat-logo-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(139, 105, 20, .15));
+}
+.subtitle {
+  font-size: 0.72rem;
+  color: #999;
+  margin: 0.1rem 0 0;
+  text-align: left;
+}
+.home-link {
+  display: inline-block;
+  color: #B8860B;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(184, 134, 11, 0.4);
+  padding-bottom: 1px;
+  font-size: 0.75rem;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.home-link:hover {
+  color: #8a6608;
+  border-bottom-color: #8a6608;
+}
+@media (max-width: 480px) {
+  .chat-header { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+  h1 { font-size: 1.05rem; }
+  .home-link { font-size: 0.7rem; }
+}
+.messages {
+  flex: 1;
+  min-height: 0;             /* KEY: without this, flex:1 won't shrink below content */
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding-right: 0.5rem;
+}
+.msg {
+  margin-bottom: 1.2rem;
+  line-height: 1.75;
+}
+.msg.user { text-align: right; }
+.msg.user .bubble {
+  display: inline-block;
+  background: #B8860B;
+  color: white;
+  padding: 0.55rem 1rem;
+  border-radius: 1rem 1rem 0.2rem 1rem;
+  max-width: 80%;
+  text-align: left;
+}
+.msg.assistant .bubble {
+  background: white;
+  padding: 1rem 1.2rem;
+  border-radius: 0.2rem 1rem 1rem 1rem;
+  border: 1px solid #e0d5c0;
+  border-left: 2px solid rgba(184,134,11,0.25);
+  max-width: 100%;
+}
+.bubble blockquote {
+  border-left: 3px solid #B8860B;
+  padding-left: 0.8rem;
+  margin: 0.6rem 0;
+  color: #555;
+  font-style: italic;
+}
+.bubble strong { color: #B8860B; font-weight: 600; }
+.bubble h2 { font-size: 1.2rem; color: #1a2332; margin: 1rem 0 0.5rem; font-family: 'Noto Serif SC', Georgia, serif; font-weight: 700; }
+.bubble h3 { font-size: 1.05rem; color: #1a2332; margin: 0.8rem 0 0.4rem; font-family: 'Noto Serif SC', Georgia, serif; font-weight: 600; }
+.bubble h4 { font-size: 0.95rem; color: #1a2332; margin: 0.7rem 0 0.3rem; font-family: 'Noto Serif SC', Georgia, serif; font-weight: 600; }
+.bubble ul, .bubble ol { margin: 0.4rem 0 0.6rem 1.3rem; }
+.bubble li { margin: 0.1rem 0; }
+.bubble hr { margin: 0.8rem 0; border: none; border-top: 1px dashed #ddd; }
+
+/* Unified gold style for ALL clickable concept links.
+ * Covers three types of clickables:
+ *   1. <a class="concept-link"> from wiki-link [[...]] (wraps a <strong>)
+ *   2. <a class="concept-link concept-link-auto"> from auto-linked plain text
+ *   3. <strong class="concept-strong"> from **bold** matching a title
+ * All three look the same: gold color, dashed golden underline, hover highlight.
+ */
+.concept-link {
+  color: #B8860B;
+  text-decoration: none;
+  cursor: pointer;
+  border-bottom: 1px dashed #B8860B;
+  transition: background 0.15s, border-bottom-style 0.15s;
+}
+.concept-link:hover {
+  background: rgba(184, 134, 11, 0.12);
+  border-bottom-style: solid;
+}
+/* Children (e.g., <strong> inside a wiki-link anchor) should inherit gold */
+.concept-link strong { color: inherit; font-weight: 600; }
+
+/* Auto-linked plain text uses bold weight to match explicit **bold** concepts.
+ * Without this, a phrase like 盖可保险（**GEICO**）where the LLM bolds only
+ * the English part would render as "normal-weight Chinese + bold English",
+ * which looks visually broken. With 600 here, both halves match. */
+.concept-link-auto { font-weight: 600; }
+/* Inside headings, inherit the heading's natural bold (700) so things like
+ * `### 4. 苹果（Apple）` keep "苹果" the same weight as the rest of the heading. */
+.bubble h1 .concept-link-auto, .bubble h2 .concept-link-auto,
+.bubble h3 .concept-link-auto, .bubble h4 .concept-link-auto,
+.preview-content h1 .concept-link-auto, .preview-content h2 .concept-link-auto,
+.preview-content h3 .concept-link-auto, .preview-content h4 .concept-link-auto {
+  font-weight: inherit;
+}
+
+/* Bold concepts that the LLM explicitly marked with **text**.
+ * They already inherit the gold color from `.bubble strong` / `.preview-content strong`,
+ * so we only add the clickable affordance here. */
+.bubble strong.concept-strong,
+.preview-content strong.concept-strong {
+  cursor: pointer;
+  border-bottom: 1px dashed #B8860B;
+  transition: background 0.15s, border-bottom-style 0.15s;
+}
+.bubble strong.concept-strong:hover,
+.preview-content strong.concept-strong:hover {
+  background: rgba(184, 134, 11, 0.12);
+  border-bottom-style: solid;
+}
+
+.status {
+  color: #B8860B;
+  font-style: italic;
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+}
+.streaming-status {
+  padding: 0.2rem 0;
+}
+.cursor-blink {
+  display: inline-block;
+  color: #B8860B;
+  font-weight: bold;
+  margin-left: 1px;
+  animation: cursor-blink 1s steps(2, start) infinite;
+}
+@keyframes cursor-blink {
+  to { visibility: hidden; }
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;        /* allow chips to wrap on narrow screens instead of squishing */
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.4rem 0.8rem;     /* row gap when wrapped, column gap normally */
+  padding: 0.3rem 0;
+  font-size: 0.78rem;
+  color: #888;
+}
+.rate-indicator {
+  flex: 1 1 auto;
+  min-width: 0;             /* allow shrink below content min-width inside flex */
+  text-align: right;
+  padding-right: 0.5rem;
+  color: #999;
+  white-space: nowrap;      /* don't break between characters (fixes vertical-strip bug on mobile) */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rate-indicator.low { color: #d97706; }
+.rate-indicator.exhausted { color: #dc2626; font-weight: 600; }
+.version-badge {
+  color: #bbb;
+  font-size: 0.7rem;
+  font-family: monospace;
+}
+/* On narrow screens (mobile), hide the version badge to free up toolbar
+ * space for the rate indicator. The badge is only useful for debugging
+ * and the value is also visible in the browser console. */
+@media (max-width: 600px) {
+  .version-badge { display: none; }
+}
+.exhausted-msg {
+  color: #dc2626 !important;
+  font-style: normal !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.toolbar button,
+.toolbar a.toolbar-link {
+  background: transparent;
+  color: #888;
+  border: 1px solid #ddd;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1.2;
+  font-family: inherit;
+  text-decoration: none;
+}
+.toolbar button:hover,
+.toolbar a.toolbar-link:hover { color: #B8860B; border-color: #B8860B; background: transparent; }
+
+/* History dropdown — appears above toolbar when 历史 button is clicked. */
+.history-dropdown {
+  position: absolute;
+  bottom: 100%;  /* sits above the toolbar */
+  left: 0;
+  right: 0;
+  max-height: 60vh;
+  background: white;
+  border: 1px solid #e0d5c0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 110;
+}
+.history-dropdown[hidden] { display: none; }
+.history-dropdown-header {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #e0d5c0;
+  font-size: 0.82rem;
+  color: #666;
+  font-weight: 500;
+  background: #faf6ef;
+}
+.history-dropdown-list {
+  overflow-y: auto;
+  flex: 1;
+}
+.history-item {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #f0e8d8;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.history-item:hover { background: #faf6ef; }
+.history-item:last-child { border-bottom: none; }
+.history-item-title {
+  font-size: 0.88rem;
+  color: #1a2332;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.history-item-meta {
+  font-size: 0.7rem;
+  color: #999;
+  margin-top: 0.2rem;
+}
+.history-empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.82rem;
+}
+/* The input-row is absolutely anchored so the dropdown positioning above
+ * the toolbar works correctly. We wrap toolbar + input-row in a relative
+ * container instead. */
+.toolbar-wrap { position: relative; }
+
+/* ==================== Redemption modal ==================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 35, 50, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+.modal-backdrop[hidden] { display: none; }
+.modal-card {
+  background: white;
+  border-radius: 0.6rem;
+  padding: 1.5rem 1.5rem 1.2rem;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  color: #999;
+  cursor: pointer;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  padding: 0;
+  line-height: 1;
+}
+.modal-close:hover { color: #B8860B; background: rgba(184,134,11,0.1); }
+.modal-title {
+  font-size: 1.15rem;
+  color: #B8860B;
+  margin: 0 0 0.8rem;
+}
+.modal-desc {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+#redeem-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0d5c0;
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  letter-spacing: 0.5px;
+  outline: none;
+  text-transform: uppercase;
+}
+#redeem-input:focus { border-color: #B8860B; }
+.modal-feedback {
+  min-height: 1.3rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+}
+.modal-feedback.error { color: #dc2626; }
+.modal-feedback.success { color: #059669; }
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.modal-btn-primary, .modal-btn-secondary {
+  padding: 0.55rem 1.2rem;
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid;
+}
+.modal-btn-primary {
+  background: #B8860B;
+  color: white;
+  border-color: #B8860B;
+}
+.modal-btn-primary:hover { background: #9a7209; }
+.modal-btn-primary:disabled { background: #ccc; border-color: #ccc; cursor: not-allowed; }
+.modal-btn-secondary {
+  background: transparent;
+  color: #666;
+  border-color: #ddd;
+}
+.modal-btn-secondary:hover { border-color: #999; color: #333; }
+
+/* ── Buy flow ── */
+/* Subtle gold accent — same size as other toolbar buttons, just tinted so
+ * it still reads as the primary "buy" CTA without being visually loud. */
+.btn-buy {
+  color: #B8860B !important;
+  border-color: #B8860B !important;
+  font-weight: 600;
+}
+.btn-buy:hover {
+  color: #8B6914 !important;
+  border-color: #8B6914 !important;
+  background: rgba(184, 134, 11, 0.06) !important;
+}
+.modal-buy { max-width: 380px; }
+.buy-sku {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(184,134,11,.08) 0%, rgba(232,195,94,.06) 100%);
+  border: 1px solid rgba(184,134,11,.18);
+  border-radius: 10px;
+  margin-top: 0.4rem;
+}
+.buy-sku-price {
+  font-family: 'Noto Serif SC', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #B8860B;
+  letter-spacing: -1px;
+}
+.buy-sku-unit { font-size: 0.9rem; color: #8a7a55; margin-left: 4px; font-weight: 500; }
+.buy-sku-note { font-size: 0.8rem; color: #8a7a55; margin-top: 0.2rem; }
+.buy-qr-wrap {
+  text-align: center;
+  padding: 0.8rem 0 0.5rem;
+}
+.buy-mobile-hint {
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+  color: #8a7a55;
+}
+.buy-mobile-hint a { color: #B8860B; font-weight: 600; text-decoration: underline; }
+/* On mobile, Hupijiao's url_qrcode is PC-only — scanning it via WeChat's
+ * gallery-scan triggers "保障支付安全" block. The correct flow is to
+ * navigate directly to `url` (pay_url), which auto-routes WeChat/H5. So on
+ * mobile we hide the QR image entirely and surface the tap-to-pay link
+ * as the primary action. */
+body.is-mobile .buy-qr-wrap img { display: none; }
+body.is-mobile .buy-mobile-hint {
+  margin-top: 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+body.is-mobile .buy-mobile-hint a {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  background: linear-gradient(135deg, #B8860B 0%, #E8C35E 100%);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-top: 0.4rem;
+}
+.buy-poll-status {
+  text-align: center;
+  font-size: 0.82rem;
+  color: #8a7a55;
+  padding: 0.5rem 0;
+  font-style: italic;
+}
+.buy-done-icon {
+  text-align: center;
+  font-size: 3rem;
+  color: #6ea95a;
+  line-height: 1;
+  margin: 0.4rem 0;
+}
+.buy-code-box {
+  margin: 0.8rem 0;
+  padding: 0.9rem 1rem;
+  background: #faf6ef;
+  border: 1px solid #e0d5c0;
+  border-radius: 8px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.98rem;
+  color: #8B6914;
+  letter-spacing: 1px;
+  text-align: center;
+  user-select: all;
+  font-weight: 600;
+}
+
+/* Buy CTA inside a rate-limit / 429 bubble */
+.buy-cta-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #B8860B 0%, #E8C35E 100%);
+  color: #fff !important;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+.buy-cta-inline:hover { background: linear-gradient(135deg, #9A7209 0%, #D4B04A 100%); }
+
+.buy-pill {
+  position: fixed;
+  bottom: 120px; /* above input-row */
+  right: 16px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px 12px 12px;
+  background: linear-gradient(135deg, #8B6914 0%, #B8860B 60%, #E8C35E 100%);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(139,105,20,.28), 0 2px 6px rgba(0,0,0,.12);
+  cursor: pointer;
+  font-family: 'Noto Serif SC', Georgia, serif;
+  font-weight: 600;
+  animation: buy-pill-pulse 2s ease-in-out infinite;
+}
+.buy-pill[hidden] { display: none; }
+.buy-pill-icon { font-size: 1.4rem; line-height: 1; }
+.buy-pill-text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; }
+.buy-pill-title { font-size: 0.82rem; }
+.buy-pill-meta { font-size: 0.68rem; color: rgba(255,255,255,.8); font-weight: 400; font-family: ui-monospace, Menlo, monospace; }
+.buy-pill.paid {
+  background: linear-gradient(135deg, #2d6a4f 0%, #52b788 100%);
+  animation: buy-pill-flash 1s ease-out 1, buy-pill-pulse 2s ease-in-out 1.2s infinite;
+}
+.buy-pill.paid .buy-pill-meta {
+  font-family: inherit;
+  font-size: 0.72rem;
+}
+@keyframes buy-pill-pulse {
+  0%, 100% { box-shadow: 0 6px 18px rgba(139,105,20,.28), 0 2px 6px rgba(0,0,0,.12); }
+  50%      { box-shadow: 0 8px 24px rgba(232,195,94,.5),  0 2px 6px rgba(0,0,0,.12); }
+}
+@keyframes buy-pill-flash {
+  0%   { transform: scale(1);   box-shadow: 0 0 0 0 rgba(82,183,136,.7); }
+  50%  { transform: scale(1.08); box-shadow: 0 0 0 20px rgba(82,183,136,0); }
+  100% { transform: scale(1);   box-shadow: none; }
+}
+
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e0d5c0;
+}
+.disclaimer {
+  font-size: 0.68rem;
+  color: #b8b0a4;
+  text-align: center;
+  margin-top: 0.4rem;
+  line-height: 1.4;
+}
+input[type="text"] {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border: 2px solid #e0d5c0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+}
+input[type="text"]:focus { border-color: #B8860B; }
+button {
+  padding: 0.7rem 1.4rem;
+  background: #B8860B;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+button:hover { background: #9a7209; }
+button:disabled { background: #ccc; cursor: not-allowed; }
+.meta {
+  font-size: 0.72rem;
+  color: #aaa;
+  margin-top: 0.3rem;
+}
+
+/* Rating bar — 👍/👎 below each assistant reply (ChatGPT-style) */
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0 4px;
+  user-select: none;
+}
+.rating-bar .rating-btn {
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  color: #b8b5a8;
+  transition: color .15s, background .15s, transform .1s;
+  background: transparent;
+  border: none;
+  opacity: 0.55;
+}
+.rating-bar .rating-btn:hover { background: rgba(0,0,0,.04); opacity: 1; }
+.rating-bar .rating-btn.active { opacity: 1; }
+.rating-bar .rating-btn.active.up   { color: #B8860B; }
+.rating-bar .rating-btn.active.down { color: #c0392b; }
+.rating-bar .rating-btn:active { transform: scale(.92); }
+
+.rating-reason {
+  margin: 8px 0 0 4px;
+  padding: 10px 12px;
+  background: #fdfaf2;
+  border: 1px solid #eadfc1;
+  border-radius: 8px;
+  max-width: 480px;
+}
+.rating-reason .hint { font-size: 12px; color: #7a6d50; margin-bottom: 6px; }
+.rating-reason textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: 13px;
+  border: 1px solid #d9cfb2;
+  border-radius: 6px;
+  resize: vertical;
+  background: #fff;
+  box-sizing: border-box;
+}
+.rating-reason .actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 8px; }
+.rating-reason .actions .submit {
+  cursor: pointer;
+  background: #1a2332;
+  color: #fff;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.rating-reason .actions .skip {
+  cursor: pointer;
+  background: transparent;
+  color: #7a6d50;
+  text-decoration: underline;
+  border: none;
+  padding: 5px 6px;
+  font-size: 13px;
+}
+
+/* Share button in rating bar — prominent gold so it stands out as the
+ * primary action (vs. the passive 👍 👎 rating buttons). */
+.rating-bar .share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 5px 10px;
+  margin-left: 6px;
+  border-radius: 14px;
+  color: #B8860B;
+  background: rgba(184, 134, 11, 0.08);
+  border: 1px solid rgba(184, 134, 11, 0.4);
+  transition: color .15s, background .15s, border-color .15s, transform .1s;
+}
+.rating-bar .share-btn:hover {
+  background: rgba(184, 134, 11, 0.18);
+  border-color: #B8860B;
+  color: #8b6508;
+}
+.rating-bar .share-btn:active { transform: scale(.94); }
+.rating-bar .share-btn svg { display: block; }
+
+/* 👍 post-rating hint bubble next to share button */
+.share-hint {
+  position: absolute;
+  background: #1a2332;
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  animation: share-hint-in .2s ease-out;
+}
+.share-hint::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 14px;
+  border: 5px solid transparent;
+  border-top-color: #1a2332;
+}
+.share-hint a {
+  color: #fde68a;
+  margin-left: 8px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.share-hint .hint-close {
+  color: #94a3b8;
+  text-decoration: none;
+  margin-left: 6px;
+  font-size: 14px;
+}
+@keyframes share-hint-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.share-hint.fade-out { opacity: 0; transition: opacity .3s; }
+
+/* Off-screen share card — rendered by html2canvas */
+.share-card {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 1080px;
+  background: #fdfaf2;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', serif;
+  color: #1a2332;
+  padding: 60px 60px 50px;
+  box-sizing: border-box;
+}
+.share-card .share-header {
+  display: flex; align-items: center; gap: 20px;
+  padding-bottom: 28px;
+  border-bottom: 2px solid #B8860B;
+  margin-bottom: 32px;
+}
+.share-card .share-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  display: block;
+}
+.share-card .share-brand {
+  font-size: 42px; font-weight: 700; color: #1a2332;
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+}
+.share-card .share-brand .share-site {
+  font-size: 24px; font-weight: 600; color: #B8860B;
+}
+.share-card .share-tagline { font-size: 22px; color: #7a6d50; margin-top: 6px; }
+.share-card .share-question {
+  background: #f3ece0;
+  padding: 24px 28px;
+  border-radius: 10px;
+  font-size: 30px;
+  line-height: 1.55;
+  margin-bottom: 28px;
+  color: #1a2332;
+}
+.share-card .share-answer {
+  font-size: 30px;
+  line-height: 1.75;
+  color: #1a2332;
+  word-break: break-word;
+  margin-bottom: 40px;
+}
+.share-card .share-answer p { margin: 0 0 18px; }
+.share-card .share-answer p:last-child { margin-bottom: 0; }
+.share-card .share-answer blockquote {
+  border-left: 6px solid #B8860B;
+  padding: 4px 0 4px 22px;
+  margin: 18px 0;
+  color: #6b5c40;
+  font-style: italic;
+  background: #f8f2e2;
+  border-radius: 0 8px 8px 0;
+}
+.share-card .share-answer strong,
+.share-card .share-answer strong.concept-strong,
+.share-card .share-answer b {
+  color: #B8860B !important;
+  font-weight: 700 !important;
+  border-bottom: none !important;
+  background: transparent !important;
+  cursor: default !important;
+}
+.share-card .share-answer h2 { font-size: 34px; font-weight: 700; color: #1a2332; margin: 28px 0 14px; }
+.share-card .share-answer h3 { font-size: 32px; font-weight: 700; color: #1a2332; margin: 22px 0 12px; }
+.share-card .share-answer h4 { font-size: 30px; font-weight: 700; color: #1a2332; margin: 18px 0 10px; }
+.share-card .share-answer ul,
+.share-card .share-answer ol { margin: 14px 0 18px 36px; padding: 0; }
+.share-card .share-answer li { margin: 4px 0; }
+.share-card .share-answer hr { margin: 20px 0; border: none; border-top: 1px dashed #c9b98a; }
+.share-card .share-answer .share-truncate-hint {
+  margin-top: 22px;
+  color: #7a6d50;
+  font-size: 26px;
+  font-style: italic;
+}
+.share-card .share-footer {
+  display: flex; align-items: center; gap: 28px;
+  border-top: 1px solid #eadfc1;
+  padding-top: 28px;
+}
+.share-card .share-qr {
+  width: 180px; height: 180px;
+  background: #fff; padding: 8px;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+.share-card .share-qr canvas,
+.share-card .share-qr img { display: block; width: 100% !important; height: 100% !important; }
+.share-card .share-cta { flex: 1; }
+.share-card .share-url { font-size: 30px; color: #B8860B; font-weight: 700; }
+.share-card .share-scan { font-size: 22px; color: #7a6d50; margin-top: 8px; }
+
+/* Preview modal */
+.share-modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.6); z-index: 200;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.share-modal-bg.show { display: flex; }
+.share-modal {
+  background: #fff; border-radius: 12px; padding: 20px;
+  max-width: 400px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.share-modal h3 { font-size: 16px; color: #1a2332; margin: 0; }
+.share-modal .preview-img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #eadfc1; }
+.share-modal .wechat-note {
+  background: #fef3c7; color: #7a6d50;
+  font-size: 13px; padding: 10px; border-radius: 6px;
+  text-align: center;
+}
+.share-modal .actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.share-modal .actions button {
+  cursor: pointer; border: none; padding: 8px 16px;
+  border-radius: 6px; font-size: 14px;
+}
+.share-modal .actions .primary { background: #1a2332; color: #fff; }
+.share-modal .actions .secondary { background: #f3ece0; color: #1a2332; }
+.share-modal .actions .close { background: transparent; color: #7a6d50; }
+.share-modal .loading {
+  text-align: center; padding: 40px; color: #7a6d50; font-size: 14px;
+}
+
+/* Shared-link banner shown to scan recipients */
+.shared-banner {
+  background: #fdfaf2;
+  border: 1px solid #eadfc1;
+  color: #7a6d50;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 0 12px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.shared-banner button {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* Transparent overlay on desktop — click the main chat area to close the
+ * preview. On mobile the preview is full-screen so the backdrop is hidden. */
+.preview-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  z-index: 90;
+  transition: background 0.3s;
+}
+body.preview-open .preview-backdrop {
+  pointer-events: auto;
+  background: rgba(26, 35, 50, 0.12);
+}
+@media (max-width: 900px) {
+  /* Mobile preview is fullscreen — the backdrop would be invisible and
+   * its click target would be behind the preview anyway. Disable it. */
+  body.preview-open .preview-backdrop {
+    pointer-events: none;
+    background: transparent;
+  }
+}
+
+/* Right: preview panel */
+.preview {
+  width: 0;
+  background: white;
+  border-left: 1px solid #e0d5c0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 100;             /* keep above the backdrop */
+}
+body.preview-open .preview {
+  width: 500px;
+}
+.preview-header {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid #e0d5c0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #faf6ef;
+  flex-shrink: 0;
+}
+.preview-header-left {
+  flex: 1;
+  min-width: 0;
+}
+.preview-type {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: #B8860B;
+  background: rgba(184, 134, 11, 0.1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.3rem;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+.preview-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a2332;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'Noto Serif SC', Georgia, serif;
+}
+.preview-english {
+  font-size: 0.78rem;
+  color: #888;
+}
+.preview-back, .preview-close {
+  background: transparent;
+  color: #888;
+  font-size: 1.3rem;
+  padding: 0 0.5rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.preview-close {
+  background: rgba(184, 134, 11, 0.08);
+  color: #B8860B;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.preview-back:hover, .preview-close:hover {
+  color: #B8860B;
+  background: rgba(184, 134, 11, 0.2);
+}
+.preview-back { display: none; }
+body.has-history .preview-back { display: inline-flex; }
+@media (max-width: 900px) {
+  /* On mobile the X button should be bigger and more obviously tappable,
+   * since browser back is now handled and users may also close via X. */
+  .preview-close {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.7rem;
+  }
+}
+
+.preview-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.2rem 1.3rem;
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+.preview-content h1 { font-size: 1.25rem; margin: 0.5rem 0 0.8rem; color: #1a2332; border-bottom: 1px solid #e0d5c0; padding-bottom: 0.3rem; font-family: 'Noto Serif SC', Georgia, serif; font-weight: 700; }
+.preview-content h2 { font-size: 1.1rem; margin: 1rem 0 0.5rem; color: #1a2332; font-family: 'Noto Serif SC', Georgia, serif; font-weight: 700; }
+.preview-content h3 { font-size: 1rem; margin: 0.8rem 0 0.4rem; color: #1a2332; font-family: 'Noto Serif SC', Georgia, serif; font-weight: 600; }
+.preview-content h4 { font-size: 0.92rem; margin: 0.7rem 0 0.3rem; color: #555; font-family: 'Noto Serif SC', Georgia, serif; font-weight: 600; }
+.preview-content p { margin: 0.5rem 0; }
+.preview-content ul, .preview-content ol { margin: 0.4rem 0 0.6rem 1.3rem; }
+.preview-content li { margin: 0.15rem 0; }
+.preview-content blockquote {
+  border-left: 3px solid #B8860B;
+  padding-left: 0.8rem;
+  margin: 0.6rem 0;
+  color: #555;
+  font-style: italic;
+}
+.preview-content strong { color: #B8860B; font-weight: 600; }
+.preview-content hr { margin: 1rem 0; border: none; border-top: 1px dashed #ddd; }
+.preview-loading { color: #888; font-style: italic; text-align: center; padding: 2rem; }
+
+/* ==================== Welcome state ==================== */
+.welcome-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+.welcome-icon {
+  font-size: 2.8rem;
+  margin-bottom: 0.8rem;
+  opacity: 0.85;
+}
+.welcome-icon-img {
+  width: 88px;
+  height: 88px;
+  margin-bottom: 0.8rem;
+  opacity: 0.92;
+  filter: drop-shadow(0 2px 6px rgba(184,134,11,.18));
+}
+.welcome-text {
+  font-size: 0.88rem;
+  color: #999;
+  margin-bottom: 1.5rem;
+  font-family: 'Noto Serif SC', Georgia, serif;
+}
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 480px;
+  width: 100%;
+}
+.welcome-card {
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid #e0d5c0;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: #1a2332;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.5;
+  transition: all 0.2s;
+  font-family: 'Noto Serif SC', Georgia, serif;
+}
+.welcome-card:hover {
+  border-color: #B8860B;
+  box-shadow: 0 4px 16px rgba(184,134,11,0.12);
+  transform: translateY(-2px);
+}
+.welcome-card-q { color: #B8860B; font-size: 0.72rem; margin-bottom: 4px; font-family: -apple-system, sans-serif; }
+@media (max-width: 480px) {
+  .welcome-grid { grid-template-columns: 1fr; gap: 8px; }
+  .welcome-icon { font-size: 2.2rem; }
+  .welcome-icon-img { width: 68px; height: 68px; }
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  body.preview-open .preview {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+  }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" defer></script>
+</head>
+<body>
+
+<div class="main">
+  <div class="main-inner">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <h1><img src="assets/tea-logo.svg" class="chat-logo-icon" alt="" aria-hidden="true">巴菲特下午茶</h1>
+        <p class="subtitle">拉把椅子，听老先生慢慢讲投资与人生</p>
+      </div>
+      <a class="home-link" href="index.html" aria-label="返回知识库首页">← 返回知识库</a>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="toolbar-wrap">
+      <!-- History dropdown: hidden by default, toggled by the 历史 button -->
+      <div class="history-dropdown" id="history-dropdown" hidden>
+        <div class="history-dropdown-header">最近对话</div>
+        <div class="history-dropdown-list" id="history-dropdown-list">
+          <div class="history-empty">还没有保存的对话</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button id="history-btn" type="button" title="查看历史对话">🕘 历史</button>
+        <button id="buy-btn" type="button" class="btn-buy" title="购买 20 次对话 · ¥9" style="display:none" data-feature="buy">💳 购买 ¥9</button>
+        <a href="talk/orders.html" class="toolbar-link" data-feature="buy" style="display:none" id="buy-orders-link" title="查看我的订单">📋 订单</a>
+        <button id="redeem-btn" type="button" title="输入密码条兑换次数">🎟️ 兑换</button>
+        <span id="history-indicator">新对话</span>
+        <span id="rate-indicator" class="rate-indicator" title="免费次数每天重置，已购次数不过期"></span>
+        <span id="version-badge" class="version-badge"></span>
+        <button id="new-chat-btn" type="button">+ 新对话</button>
+      </div>
+    </div>
+
+    <!-- Purchase modal -->
+    <div class="modal-backdrop" id="buy-modal" hidden>
+      <div class="modal-card modal-buy">
+        <button class="modal-close" id="buy-modal-close" type="button" aria-label="关闭">×</button>
+        <h3 class="modal-title">购买 20 次对话</h3>
+        <div class="buy-sku">
+          <div class="buy-sku-price">¥9<span class="buy-sku-unit">/20 次</span></div>
+          <div class="buy-sku-note">买断制，次数不过期 · 支持微信支付</div>
+        </div>
+        <div class="buy-stage" id="buy-stage-init">
+          <p class="modal-desc" style="margin-top:0.8rem">
+            支付成功后密码条自动到账并保存到本机。<strong>换浏览器或清除数据后需要重新输入，请务必保管好密码条、不要对外分享，建议复制到备忘录等笔记软件保存。</strong>
+          </p>
+          <div class="modal-actions">
+            <button id="buy-cancel" type="button" class="modal-btn-secondary">取消</button>
+            <button id="buy-start" type="button" class="modal-btn-primary">去支付</button>
+          </div>
+          <div class="modal-feedback" id="buy-feedback"></div>
+        </div>
+        <div class="buy-stage" id="buy-stage-pay" hidden>
+          <p class="modal-desc" style="text-align:center;margin:0.8rem 0 0.5rem">
+            <b>微信扫码支付</b><br>
+            <small>支付成功后本页会自动跳转，别关闭窗口</small>
+          </p>
+          <div class="buy-qr-wrap">
+            <img id="buy-qr" alt="支付二维码" style="width:200px;height:200px;border-radius:8px;background:#f5efe3;border:1px solid #e0d5c0">
+            <div class="buy-mobile-hint">
+              手机上直接打开：<a id="buy-pay-link" href="talk.html#" target="_blank">点这里支付</a>
+            </div>
+          </div>
+          <div class="buy-poll-status" id="buy-poll-status">等待支付…</div>
+          <div class="modal-actions">
+            <button id="buy-cancel-pay" type="button" class="modal-btn-secondary">取消</button>
+          </div>
+        </div>
+        <div class="buy-stage" id="buy-stage-done" hidden>
+          <div class="buy-done-icon">✓</div>
+          <p class="modal-desc" style="text-align:center;margin-top:0.3rem">
+            <b>支付成功！20 次已到账</b><br>
+            <small>以下密码条已自动保存到本机，换设备时输入即可继续使用</small>
+          </p>
+          <div class="buy-code-box" id="buy-code-box"></div>
+          <div class="modal-actions" style="justify-content:center">
+            <button id="buy-copy" type="button" class="modal-btn-secondary">复制密码条</button>
+            <button id="buy-done-close" type="button" class="modal-btn-primary">开始提问</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment pill: shown while a pending order exists and buy modal is minimized -->
+    <button type="button" class="buy-pill" id="buy-pill" hidden>
+      <span class="buy-pill-icon">⏳</span>
+      <span class="buy-pill-text">
+        <span class="buy-pill-title">支付中</span>
+        <span class="buy-pill-meta" id="buy-pill-meta">—</span>
+      </span>
+    </button>
+
+    <!-- Redemption modal -->
+    <div class="modal-backdrop" id="redeem-modal" hidden>
+      <div class="modal-card">
+        <button class="modal-close" id="redeem-modal-close" type="button" aria-label="关闭">×</button>
+        <h3 class="modal-title">兑换密码条</h3>
+        <p class="modal-desc">
+          输入购买时收到的密码条，兑换次数将绑定到这个密码本身，你可以在<b>任何设备</b>上输入同一密码条共享使用。
+          <br><small style="color:#a97">⚠ 请妥善保管，泄露后无法追回</small>
+        </p>
+        <input type="text" id="redeem-input" placeholder="YH-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <div class="modal-feedback" id="redeem-feedback"></div>
+        <div class="modal-actions">
+          <button id="redeem-cancel" type="button" class="modal-btn-secondary">取消</button>
+          <button id="redeem-submit" type="button" class="modal-btn-primary">兑换</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <input type="text" id="user-input" placeholder="请教巴菲特一个问题..." autofocus>
+      <button id="send-btn">提问</button>
+    </div>
+    <p class="disclaimer">内容由 AI 生成，基于巴菲特公开信件整理，不构成任何投资建议。投资有风险，决策需谨慎。</p>
+  </div>
+</div>
+
+<div class="preview-backdrop" id="preview-backdrop" aria-hidden="true"></div>
+
+<aside class="preview" id="preview">
+  <div class="preview-header">
+    <button class="preview-back" id="preview-back" title="返回上一个">←</button>
+    <div class="preview-header-left">
+      <div class="preview-type" id="preview-type"></div>
+      <div class="preview-title" id="preview-title"></div>
+      <div class="preview-english" id="preview-english"></div>
+    </div>
+    <button class="preview-close" id="preview-close" title="关闭">×</button>
+  </div>
+  <div class="preview-content" id="preview-content"></div>
+</aside>
+
+<script>
+// ==================== State ====================
+let titlesMap = null;            // { title: { path, type, english } }
+const previewHistory = [];       // Stack of viewed paths, for back button
+/** Monotonic request id: when a new preview open starts, we increment this.
+ * Any in-flight older request whose id < currentRequestId is discarded on return. */
+let currentPreviewRequestId = 0;
+/** Multi-turn conversation history sent with each request.
+ *  Only the most recent 8 messages are retained client-side.
+ */
+const chatHistory = [];
+
+/** ID of the conversation currently displayed. Generated client-side on
+ *  the first outgoing message of a fresh chat. Stays stable across a
+ *  conversation so subsequent saves update the same KV entry. */
+let currentConvId = null;
+
+/** Cached list of conversation summaries from /api/conv/list. */
+let recentConvs = [];
+
+/** Create a UUID for new conversations. Falls back to timestamp+random for
+ *  ancient browsers without crypto.randomUUID (safari < 15.4). */
+function makeConvId() {
+  try {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+  } catch (e) { /* fall through */ }
+  return 'conv-' + Date.now().toString(36) + '-' +
+    Math.random().toString(36).slice(2, 10);
+}
+
+/** Redemption code stored in localStorage and sent on every chat as the
+ *  `X-Code` header. The code acts as a bearer credential: whoever has it
+ *  can use the balance, so users are instructed to keep it private. The
+ *  same code can be entered on multiple devices to share one balance. */
+const PAID_CODE_KEY = 'bh_paid_code_v1';
+let paidCode = null;
+try {
+  paidCode = localStorage.getItem(PAID_CODE_KEY) || null;
+} catch (e) { /* storage blocked */ }
+
+function savePaidCode(code) {
+  paidCode = code;
+  try {
+    if (code) localStorage.setItem(PAID_CODE_KEY, code);
+    else localStorage.removeItem(PAID_CODE_KEY);
+  } catch (e) { /* ignore */ }
+}
+
+/** Headers for any POST to /api/chat(/stream). Auto-includes the saved
+ *  paid code if we have one. */
+function chatRequestHeaders() {
+  const h = {
+    'Content-Type': 'application/json',
+    'X-Fingerprint': FINGERPRINT,
+  };
+  if (paidCode) h['X-Code'] = paidCode;
+  return h;
+}
+
+// ==================== DOM ====================
+const $ = (id) => document.getElementById(id);
+const messagesDiv = $('messages');
+const userInput = $('user-input');
+const sendBtn = $('send-btn');
+const newChatBtn = $('new-chat-btn');
+const historyIndicator = $('history-indicator');
+const rateIndicator = $('rate-indicator');
+const versionBadge = $('version-badge');
+const historyBtn = $('history-btn');
+const historyDropdown = $('history-dropdown');
+const historyDropdownList = $('history-dropdown-list');
+const redeemBtn = $('redeem-btn');
+const buyBtn = $('buy-btn');
+const buyModal = $('buy-modal');
+const buyStageInit = $('buy-stage-init');
+const buyStagePay = $('buy-stage-pay');
+const buyStageDone = $('buy-stage-done');
+const buyStart = $('buy-start');
+const buyCancel = $('buy-cancel');
+const buyCancelPay = $('buy-cancel-pay');
+const buyModalClose = $('buy-modal-close');
+const buyFeedback = $('buy-feedback');
+const buyQr = $('buy-qr');
+const buyPayLink = $('buy-pay-link');
+const buyPollStatus = $('buy-poll-status');
+const buyCodeBox = $('buy-code-box');
+const buyCopy = $('buy-copy');
+const buyDoneClose = $('buy-done-close');
+const redeemModal = $('redeem-modal');
+const redeemInput = $('redeem-input');
+const redeemSubmit = $('redeem-submit');
+const redeemCancel = $('redeem-cancel');
+const redeemClose = $('redeem-modal-close');
+const redeemFeedback = $('redeem-feedback');
+const previewEl = $('preview');
+const previewBack = $('preview-back');
+const previewClose = $('preview-close');
+const previewType = $('preview-type');
+const previewTitle = $('preview-title');
+const previewEnglish = $('preview-english');
+const previewContent = $('preview-content');
+
+// API endpoint — empty string means same-origin (Pages Functions proxies
+// /api/* to the actual worker at buffett-ai-api-staging.workers.dev).
+// Same-origin avoids CORS preflight AND works around Chinese mobile carriers
+// that throttle/block workers.dev subdomains.
+const API_BASE = 'https://buffett-ai-test.pages.dev';
+
+// ==================== Order store (localStorage) ====================
+// Single source of truth on the client side. Server KV is authoritative,
+// this is just a mirror for fast UI + offline fallback.
+const ORDER_STORE_KEY = 'bf_pending_orders';
+const ACTIVE_PENDING_MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes
+const RECENT_VISIBLE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+function readOrderStore() {
+  try {
+    const raw = localStorage.getItem(ORDER_STORE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+function writeOrderStore(orders) {
+  try {
+    localStorage.setItem(ORDER_STORE_KEY, JSON.stringify(orders));
+  } catch (e) {
+    console.warn('[order-store] write failed:', e);
+  }
+}
+
+function addPendingOrder(order) {
+  const list = readOrderStore();
+  // Guard against dup insertion
+  if (list.some(o => o.order_no === order.order_no)) return;
+  list.push({
+    order_no: order.order_no,
+    amount_cny: order.amount_cny ?? order.amount ?? 9,
+    credits: order.credits ?? 20,
+    pay_url: order.pay_url || '',
+    qr_url: order.qr_url || '',
+    created_at: Date.now(),
+    last_seen_status: 'pending',
+    issued_code: null,
+  });
+  writeOrderStore(list);
+}
+
+function updateOrderInStore(order_no, patch) {
+  const list = readOrderStore();
+  const i = list.findIndex(o => o.order_no === order_no);
+  if (i < 0) return;
+  list[i] = { ...list[i], ...patch };
+  writeOrderStore(list);
+}
+
+function removeOrderFromStore(order_no) {
+  const list = readOrderStore().filter(o => o.order_no !== order_no);
+  writeOrderStore(list);
+}
+
+/** Prune stale entries: drop non-pending orders older than 7 days. */
+function pruneOrderStore() {
+  const now = Date.now();
+  const list = readOrderStore().filter(o => {
+    if (o.last_seen_status === 'pending') return true; // keep all pending
+    return (now - (o.created_at || 0)) < RECENT_VISIBLE_MAX_AGE_MS;
+  });
+  writeOrderStore(list);
+}
+
+/** Return the most recent "active pending" order (status pending, age<30min). */
+function activePendingOrder() {
+  const now = Date.now();
+  const list = readOrderStore();
+  return list
+    .filter(o => o.last_seen_status === 'pending' && (now - (o.created_at || 0)) < ACTIVE_PENDING_MAX_AGE_MS)
+    .sort((a, b) => (b.created_at || 0) - (a.created_at || 0))[0] || null;
+}
+
+// Prune on load
+pruneOrderStore();
+
+const CLIENT_VERSION = 'v0.15.0';  // bump whenever test-page changes
+
+// Mobile detection — iOS Safari + Chinese cellular networks buffer SSE
+// responses entirely. Skip the streaming path on mobile and use the
+// non-stream endpoint directly for reliability.
+const IS_MOBILE = /Mobi|Android|iPad|iPhone|iPod/i.test(navigator.userAgent);
+console.log('[client]', CLIENT_VERSION, 'mobile=', IS_MOBILE);
+if (IS_MOBILE) document.body.classList.add('is-mobile');
+
+// Populate the version badge in the toolbar so we can visually confirm
+// which client version is running (important when debugging mobile cache).
+if (versionBadge) versionBadge.textContent = CLIENT_VERSION + (IS_MOBILE ? '·m' : '');
+
+const getApiUrl = () => API_BASE.replace(/\/+$/, '');
+
+// ==================== Welcome state ====================
+const ALL_QUESTIONS = [
+  '你怎么看科技股？','什么是护城河？','浮存金的本质是什么？',
+  '你为什么买可口可乐？','什么是安全边际？','你怎么看债务？',
+  '为什么说复利是世界第八大奇迹？','你犯过最大的错误是什么？','什么是能力圈？',
+  '你怎么评估一个公司的管理层？','市场先生是什么意思？','伯克希尔为什么不分红？',
+  '喜诗糖果为什么是完美生意？','你怎么看通货膨胀？','什么是内在价值？',
+  '你对年轻人有什么建议？','你为什么不投资黄金？','伯克希尔为什么不拆股？',
+  '你怎么看回购？','芒格对你影响最大的是什么？','你怎么看保险业？',
+  '什么是透视盈余？','你怎么选行业？','你怎么看待风险？',
+  '留存收益为什么重要？','你怎么做资本配置？','B夫人是谁？',
+  '你怎么看品牌价值？','什么是特许经营权？','你为什么买苹果？',
+];
+
+function pickRandom(arr, n) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.random() * (i + 1) | 0;
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, n);
+}
+
+function showWelcomeState() {
+  if (chatHistory.length > 0) return;
+  const questions = pickRandom(ALL_QUESTIONS, 4);
+  messagesDiv.innerHTML = `
+    <div class="welcome-state">
+      <img src="assets/tea-logo.svg" class="welcome-icon-img" alt="" aria-hidden="true">
+      <div class="welcome-text">不知道问什么？试试这些话题</div>
+      <div class="welcome-grid">
+        ${questions.map((q, i) => `
+          <div class="welcome-card" data-question="${q.replace(/"/g, '&quot;')}">
+            <div class="welcome-card-q">话题 ${i + 1}</div>
+            ${q}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  messagesDiv.querySelectorAll('.welcome-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const q = card.dataset.question;
+      userInput.value = q;
+      sendMessage();
+    });
+  });
+}
+
+function removeWelcomeState() {
+  const ws = messagesDiv.querySelector('.welcome-state');
+  if (ws) ws.remove();
+}
+
+// Show welcome on initial load
+showWelcomeState();
+
+// Auto-ask from URL ?q= parameter (from homepage chip clicks).
+// IMPORTANT: skip when ?r= is present — that means the user arrived via a
+// shared link, and hydrateFromSharedLink() below will populate the cached
+// Q&A from /api/shared. Falling through to auto-ask would (a) burn the
+// visitor's free credits and (b) produce a DIFFERENT answer from the one
+// the sharer showed in their screenshot.
+(function checkUrlQuestion() {
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  const r = params.get('r');
+  if (r) return;  // let hydrateFromSharedLink handle this
+  if (q) {
+    history.replaceState(null, '', window.location.pathname);
+    setTimeout(() => {
+      removeWelcomeState();
+      userInput.value = q;
+      sendMessage();
+    }, 300);
+  }
+})();
+
+// ==================== Fingerprint ====================
+/**
+ * Persistent per-browser fingerprint, used as a secondary rate-limit
+ * dimension. We derive it once from a few stable browser attributes and
+ * then cache it in localStorage so it survives across sessions. This is
+ * NOT a privacy tracker — it just keeps a single user from trivially
+ * bypassing the 5/day quota by opening a new tab.
+ */
+function getOrCreateFingerprint() {
+  const KEY = 'buffett_ai_fp_v1';
+  try {
+    const cached = localStorage.getItem(KEY);
+    if (cached && cached.length >= 4) return cached;
+  } catch (e) { /* storage blocked — fall through */ }
+
+  const data = [
+    navigator.userAgent || '',
+    navigator.language || '',
+    (screen.width || 0) + 'x' + (screen.height || 0),
+    new Date().getTimezoneOffset(),
+    navigator.hardwareConcurrency || 0,
+    (navigator.platform || ''),
+  ].join('|');
+
+  // djb2-style hash, base36, padded to 8+ chars
+  let h = 5381;
+  for (let i = 0; i < data.length; i++) {
+    h = (((h << 5) + h) + data.charCodeAt(i)) | 0;
+  }
+  const fp = Math.abs(h).toString(36) + Math.random().toString(36).slice(2, 8);
+
+  try { localStorage.setItem(KEY, fp); } catch (e) { /* ignore */ }
+  return fp;
+}
+const FINGERPRINT = getOrCreateFingerprint();
+console.log('[fingerprint]', FINGERPRINT);
+
+// ==================== Rate limit indicator ====================
+// Tracks the last-known free/paid balance. `free`/`limit` are the daily
+// free quota; `paid`/`paidTotal` are the redemption-code balance and the
+// original total purchased amount (so the UI can show progress like 9/10).
+// Populated from response headers and refreshed explicitly via /api/credits
+// when we want to show balance without making a chat request (e.g., right
+// after a redemption).
+const rateState = { free: null, limit: null, paid: null, paidTotal: null, unusedExtraCodes: 0 };
+
+function renderRateIndicator() {
+  const { free, limit, paid, paidTotal, unusedExtraCodes } = rateState;
+  if (typeof free !== 'number' || typeof limit !== 'number') {
+    rateIndicator.textContent = '';
+    rateIndicator.className = 'rate-indicator';
+    return;
+  }
+  // "今日免费 X / Y" makes the daily-quota meaning unambiguous.
+  const parts = [`今日免费 ${free}/${limit}`];
+  if (typeof paid === 'number' && paid > 0) {
+    // Show "X / Y" if we know the original total, otherwise just "X 次".
+    if (typeof paidTotal === 'number' && paidTotal > 0) {
+      parts.push(`已购 ${paid}/${paidTotal}`);
+    } else {
+      parts.push(`已购 ${paid} 次`);
+    }
+  }
+  if (unusedExtraCodes && unusedExtraCodes > 0) {
+    parts.push(`+${unusedExtraCodes} 张待用`);
+  }
+  rateIndicator.textContent = parts.join(' · ');
+  // Only turn red when BOTH free and paid are empty — paying users should
+  // never see the exhausted color as long as they have credits left.
+  const totalRemaining = free + (paid || 0);
+  rateIndicator.className = 'rate-indicator' +
+    (totalRemaining === 0 ? ' exhausted' : (totalRemaining <= 1 ? ' low' : ''));
+}
+
+/** Read X-RateLimit-* + X-Credits-* headers from a fetch Response. */
+function applyRateHeaders(res) {
+  const free = parseInt(res.headers.get('X-RateLimit-Remaining') || '', 10);
+  const limit = parseInt(res.headers.get('X-RateLimit-Limit') || '', 10);
+  const paid = parseInt(res.headers.get('X-Credits-Paid') || '', 10);
+  if (!Number.isNaN(free)) rateState.free = free;
+  if (!Number.isNaN(limit)) rateState.limit = limit;
+  if (!Number.isNaN(paid)) rateState.paid = paid;
+  renderRateIndicator();
+}
+
+/** Refresh the paid credit balance + original total from /api/credits. */
+async function refreshPaidCredits() {
+  if (!paidCode) {
+    rateState.paid = 0;
+    rateState.paidTotal = null;
+    renderRateIndicator();
+    return;
+  }
+  try {
+    const res = await fetch(`${getApiUrl()}/api/credits`, {
+      headers: { 'X-Code': paidCode },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      rateState.paid = data.balance || 0;
+      if (typeof data.total === 'number' && data.total > 0) {
+        rateState.paidTotal = data.total;
+      }
+      renderRateIndicator();
+    }
+  } catch (e) {
+    console.warn('[credits] refresh failed:', e);
+  }
+}
+
+// ==================== Load titles on init ====================
+async function loadTitles() {
+  try {
+    const res = await fetch(`${getApiUrl()}/api/titles`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    titlesMap = await res.json();
+    autoLinkableTitlesCache = null; // invalidate cache so new list is built
+    console.log(`Loaded ${Object.keys(titlesMap).length} titles`);
+  } catch (err) {
+    console.warn('Failed to load titles:', err);
+    titlesMap = {};
+    autoLinkableTitlesCache = null;
+  }
+}
+loadTitles();
+
+// ==================== Load recent conversations ====================
+/** Fetch /api/conv/list for the current fingerprint and render the list
+ *  inside the "历史" dropdown. Called at page load and after each send. */
+async function loadRecentConvs() {
+  try {
+    const res = await fetch(`${getApiUrl()}/api/conv/list`, {
+      headers: { 'X-Fingerprint': FINGERPRINT },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    recentConvs = Array.isArray(data.convs) ? data.convs : [];
+    renderHistoryList();
+  } catch (err) {
+    console.warn('Failed to load recent convs:', err);
+  }
+}
+
+/** Load a specific conversation by id and replace the current chat UI. */
+async function loadConversationById(convId) {
+  try {
+    const res = await fetch(
+      `${getApiUrl()}/api/conv/get?id=${encodeURIComponent(convId)}`,
+      { headers: { 'X-Fingerprint': FINGERPRINT } }
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const conv = await res.json();
+    if (!conv || !Array.isArray(conv.messages)) return;
+
+    // Swap current chat state for the loaded conversation
+    currentConvId = conv.id;
+    chatHistory.length = 0;
+    messagesDiv.innerHTML = '';
+    for (const m of conv.messages) {
+      chatHistory.push({ role: m.role, content: m.content, reply_id: m.reply_id });
+      addMessage(m.role, m.content, undefined, m.reply_id);
+    }
+    updateHistoryIndicator();
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    hideHistoryDropdown();
+  } catch (err) {
+    console.warn('Failed to load conversation:', err);
+  }
+}
+// Scan-side: if the URL has ?r=<reply_id>, hydrate the chat with the cached
+// Q&A from that shared reply so the recipient sees exactly what the sharer saw
+// (not a fresh Gemini run, which would produce a different answer).
+// If ?q=... exists but not ?r=, degrade to just prefilling the input.
+async function hydrateFromSharedLink() {
+  try {
+    const params = new URLSearchParams(location.search);
+    const r = params.get('r');
+    const q = params.get('q');
+    console.log('[share-hydrate] params', { r, q });
+    if (!r && !q) return;
+
+    if (r) {
+      const fetchUrl = `${getApiUrl()}/api/shared?reply_id=${encodeURIComponent(r)}`;
+      console.log('[share-hydrate] fetching', fetchUrl);
+      try {
+        const res = await fetch(fetchUrl);
+        console.log('[share-hydrate] status', res.status);
+        if (res.ok) {
+          const data = await res.json();
+          console.log('[share-hydrate] data', {
+            hasMessage: !!data.message,
+            hasReply: !!data.reply,
+            replyLen: (data.reply || '').length,
+          });
+          if (data && data.message && data.reply) {
+            removeWelcomeState();
+            addMessage('user', data.message);
+            addMessage('assistant', data.reply);  // no replyId — scanner can't rate someone else's reply
+            chatHistory.push({ role: 'user', content: data.message });
+            chatHistory.push({ role: 'assistant', content: data.reply });
+            updateHistoryIndicator();
+            showSharedBanner();
+            console.log('[share-hydrate] rendered OK');
+            return;
+          } else {
+            console.warn('[share-hydrate] missing fields', data);
+          }
+        } else {
+          const text = await res.text().catch(() => '');
+          console.warn('[share-hydrate] not OK', res.status, text);
+        }
+      } catch (e) { console.warn('[share-hydrate] fetch failed:', e); }
+    }
+    if (q) {
+      console.log('[share-hydrate] falling back to prefill q');
+      userInput.value = q;
+    }
+  } catch (e) { console.warn('[share-hydrate] outer error', e); }
+}
+
+function showSharedBanner() {
+  const banner = document.createElement('div');
+  banner.className = 'shared-banner';
+  banner.innerHTML = `
+    <span style="flex:1">朋友分享了这个回答，看完下方可以自己提问 ☕</span>
+    <button type="button" aria-label="关闭">&times;</button>
+  `;
+  banner.querySelector('button').onclick = () => banner.remove();
+  if (messagesDiv.firstChild) messagesDiv.insertBefore(banner, messagesDiv.firstChild);
+  else messagesDiv.appendChild(banner);
+}
+
+// Run hydrate right away; don't wait for loadRecentConvs
+hydrateFromSharedLink();
+// Load the conv list after titles so we don't block initial paint.
+setTimeout(loadRecentConvs, 300);
+
+// ==================== Markdown rendering ====================
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function stripFrontmatter(text) {
+  // Handle both CRLF and LF line endings
+  return text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
+}
+
+/**
+ * Simple markdown → HTML renderer.
+ * Handles: headers, bold, italic, blockquotes, lists, wiki-links, hr.
+ */
+/** Render multiple lines as a single inline block with <br> between them.
+ * We use a Private-Use-Area character as a placeholder so HTML escaping
+ * inside inlineFormat doesn't turn our joined <br> tags into &lt;br&gt;. */
+const BR_PLACEHOLDER = '\uE001';
+function renderInlineWithBreaks(lines) {
+  const joined = lines.join(BR_PLACEHOLDER);
+  return inlineFormat(joined).split(BR_PLACEHOLDER).join('<br>');
+}
+
+function renderMarkdown(text, { stripFM = false } = {}) {
+  if (stripFM) text = stripFrontmatter(text);
+
+  // Split into lines — support both Windows (\r\n) and Unix (\n) line endings.
+  // Without this, a trailing \r on each line breaks header/hr regexes because
+  // $ in a non-multiline regex only matches end-of-string, not before \r.
+  const lines = text.split(/\r?\n/);
+  const blocks = [];
+  let i = 0;
+
+  // Hard safety cap: no well-formed markdown should iterate more than
+  // lines.length times per pass. If we ever exceed this, break out rather
+  // than freeze the tab.
+  const maxIterations = lines.length * 2 + 100;
+  let iterations = 0;
+
+  while (i < lines.length) {
+    if (++iterations > maxIterations) {
+      console.error('[renderMarkdown] safety cap hit at line %d: %s',
+        i, JSON.stringify(lines[i]));
+      break;
+    }
+    const line = lines[i];
+    const lineStart = i; // to detect "no progress"
+
+    // Horizontal rule
+    if (/^---\s*$/.test(line)) {
+      blocks.push('<hr>');
+      i++;
+      continue;
+    }
+
+    // Headers (allow empty text after # for robustness)
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if (h) {
+      const level = h[1].length;
+      blocks.push(`<h${level}>${inlineFormat(h[2] || '')}</h${level}>`);
+      i++;
+      continue;
+    }
+
+    // Blockquote (may span multiple lines)
+    if (/^>\s?/.test(line)) {
+      const quoteLines = [];
+      while (i < lines.length && /^>\s?/.test(lines[i])) {
+        quoteLines.push(lines[i].replace(/^>\s?/, ''));
+        i++;
+      }
+      blocks.push(`<blockquote>${renderInlineWithBreaks(quoteLines)}</blockquote>`);
+      continue;
+    }
+
+    // Unordered list
+    if (/^[-*]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^[-*]\s+/.test(lines[i])) {
+        items.push(`<li>${inlineFormat(lines[i].replace(/^[-*]\s+/, ''))}</li>`);
+        i++;
+      }
+      blocks.push(`<ul>${items.join('')}</ul>`);
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+\.\s+/.test(line)) {
+      const rawLines = [];
+      const items = [];
+      while (i < lines.length && /^\d+\.\s+/.test(lines[i])) {
+        rawLines.push(lines[i]);
+        items.push(`<li>${inlineFormat(lines[i].replace(/^\d+\.\s+/, ''))}</li>`);
+        i++;
+      }
+      // If this "list" has only one item, it is almost always a standalone
+      // numbered heading (e.g. "1. 关于错误:" separated by prose paragraphs).
+      // Wrapping each in its own <ol> makes CSS reset the counter to 1 every
+      // time, causing three "1." headings to appear. Render as <p> to keep
+      // the author's original number visible.
+      if (items.length === 1) {
+        blocks.push(`<p>${inlineFormat(rawLines[0])}</p>`);
+      } else {
+        blocks.push(`<ol>${items.join('')}</ol>`);
+      }
+      continue;
+    }
+
+    // Empty line → skip
+    if (line.trim() === '') {
+      i++;
+      continue;
+    }
+
+    // Paragraph: accumulate non-empty lines
+    const paraLines = [];
+    while (
+      i < lines.length &&
+      lines[i].trim() !== '' &&
+      !/^(#{1,4}\s|>\s?|[-*]\s+|\d+\.\s+|---\s*$)/.test(lines[i])
+    ) {
+      paraLines.push(lines[i]);
+      i++;
+    }
+    if (paraLines.length > 0) {
+      blocks.push(`<p>${renderInlineWithBreaks(paraLines)}</p>`);
+    }
+
+    // Safety: if we didn't advance at all this iteration, force i++ and warn.
+    // This is a defensive net against any regex mismatch between the outer
+    // dispatch and the inner paragraph block-pattern check.
+    if (i === lineStart) {
+      console.warn('[renderMarkdown] no progress at line %d: %s — forcing advance',
+        i, JSON.stringify(lines[i]));
+      i++;
+    }
+  }
+
+  let html = blocks.join('\n');
+  // Make matching concepts/strongs clickable
+  html = makeConceptsClickable(html);
+  return html;
+}
+
+/**
+ * Inline formatting: escape HTML, then apply wiki-links, bold, italic, external links.
+ */
+function inlineFormat(text) {
+  // Escape first
+  let s = escapeHtml(text);
+
+  // Wiki-links: [[target|display]] or [[target]]
+  // Placeholder token so later bold/italic don't mangle them
+  const placeholders = [];
+  const addPlaceholder = (html) => {
+    const token = `__WLINK_${placeholders.length}__`;
+    placeholders.push(html);
+    return token;
+  };
+
+  s = s.replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, (_, target, display) =>
+    addPlaceholder(`<a href="talk.html#" class="concept-link" data-title="${encodeAttr(target.trim())}"><strong>${escapeHtml(display.trim())}</strong></a>`)
+  );
+  s = s.replace(/\[\[([^\]]+)\]\]/g, (_, target) => {
+    const t = target.trim();
+    return addPlaceholder(`<a href="talk.html#" class="concept-link" data-title="${encodeAttr(t)}"><strong>${escapeHtml(t)}</strong></a>`);
+  });
+
+  // External links [text](url)
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, txt, url) =>
+    addPlaceholder(`<a href="https://learnbuffett.com/talk/${encodeAttr(url)}" target="_blank" rel="noopener">${escapeHtml(txt)}</a>`)
+  );
+
+  // Bold
+  s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+  // Italic (but not matching the ** we just produced)
+  s = s.replace(/(^|[^\*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+  // Inline code
+  s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // Restore placeholders
+  s = s.replace(/__WLINK_(\d+)__/g, (_, idx) => placeholders[Number(idx)]);
+
+  return s;
+}
+
+function encodeAttr(s) {
+  return String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+/** Titles that should be auto-linked in plain text (excludes letter titles). */
+let autoLinkableTitlesCache = null;
+function getAutoLinkableTitles() {
+  if (autoLinkableTitlesCache) return autoLinkableTitlesCache;
+  if (!titlesMap) return [];
+  // Only auto-link concepts, companies, and people — NOT letters (which
+  // would match things like "1986 巴菲特致股东信" inside prose).
+  const entries = Object.entries(titlesMap).filter(
+    ([, e]) => e.type === 'concepts' || e.type === 'companies' || e.type === 'people'
+  );
+  // Sort by length descending so longer matches are preferred
+  entries.sort((a, b) => b[0].length - a[0].length);
+  autoLinkableTitlesCache = entries.map(([title]) => title);
+  return autoLinkableTitlesCache;
+}
+
+/**
+ * Mark clickable concepts in the rendered HTML, via two mechanisms:
+ * 1. <strong>term</strong> matching a known title → add .concept-strong class
+ * 2. Plain text mentions of known concept/company/people titles → wrap in
+ *    a <a class="concept-link"> element. Skips text already inside <a>,
+ *    <strong>, or <code> to avoid double-linking.
+ */
+function makeConceptsClickable(html) {
+  if (!titlesMap) return html;
+
+  try {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
+
+    // (1) Mark bold concepts
+    const strongs = wrapper.querySelectorAll('strong');
+    for (const strong of strongs) {
+      if (strong.closest('.concept-link')) continue;
+      const term = strong.textContent.trim();
+      if (term && titlesMap[term]) {
+        strong.classList.add('concept-strong');
+        strong.dataset.title = term;
+      }
+    }
+
+    // (2) Auto-link plain text mentions of concepts/companies/people
+    autoLinkTextNodes(wrapper);
+
+    return wrapper.innerHTML;
+  } catch (err) {
+    console.error('[makeConceptsClickable] failed:', err);
+    return html;
+  }
+}
+
+/** Walk text nodes under root and wrap first occurrences of known titles. */
+function autoLinkTextNodes(root) {
+  const titles = getAutoLinkableTitles();
+  if (titles.length === 0) return;
+
+  // Collect all eligible text nodes first (so we can mutate freely after)
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      // Skip text inside:
+      //   - <a>: don't double-wrap an existing link
+      //   - <code>: never auto-link inside code
+      //   - <strong class="concept-strong">: already an exact-match clickable concept
+      // We DO walk into plain <strong> (no concept-strong class) so that things
+      // like **喜诗糖果 (See's Candies)** still get the inner "喜诗糖果" auto-linked.
+      if (parent.closest('a, code, strong.concept-strong')) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+
+  const textNodes = [];
+  let node;
+  while ((node = walker.nextNode())) textNodes.push(node);
+
+  for (const textNode of textNodes) {
+    autoLinkOneTextNode(textNode, titles);
+  }
+}
+
+/** Recursively link the earliest title match in a text node, then its tail. */
+function autoLinkOneTextNode(textNode, titles) {
+  const text = textNode.nodeValue;
+  if (!text || text.length < 2) return;
+
+  let bestIdx = text.length;
+  let bestTitle = null;
+  for (const title of titles) {
+    if (title.length > text.length - 0) continue;
+    const idx = text.indexOf(title);
+    if (idx >= 0 && idx < bestIdx) {
+      bestIdx = idx;
+      bestTitle = title;
+      if (idx === 0 && title.length === text.length) break;
+    }
+  }
+
+  if (!bestTitle) return;
+
+  const before = text.slice(0, bestIdx);
+  const after = text.slice(bestIdx + bestTitle.length);
+  const parent = textNode.parentNode;
+  if (!parent) return;
+
+  if (before) parent.insertBefore(document.createTextNode(before), textNode);
+
+  const a = document.createElement('a');
+  a.href = '#';
+  a.className = 'concept-link concept-link-auto';
+  a.dataset.title = bestTitle;
+  a.textContent = bestTitle;
+  parent.insertBefore(a, textNode);
+
+  if (after) {
+    const afterNode = document.createTextNode(after);
+    parent.insertBefore(afterNode, textNode);
+    // Recurse into the remaining tail to find more matches
+    autoLinkOneTextNode(afterNode, titles);
+  }
+
+  parent.removeChild(textNode);
+}
+
+// ==================== Chat ====================
+function updateHistoryIndicator() {
+  const turns = chatHistory.filter(m => m.role === 'user').length;
+  historyIndicator.textContent = turns === 0 ? '新对话' : `对话中（${turns} 轮）`;
+}
+
+function clearChat() {
+  // "开始新对话" — preserve history on the server (it will still show up
+  // in the 历史 list), just reset the visible state and start a new conv_id.
+  chatHistory.length = 0;
+  currentConvId = null;
+  messagesDiv.innerHTML = '';
+  showWelcomeState();
+  updateHistoryIndicator();
+  userInput.focus();
+}
+
+async function sendMessage() {
+  // In-flight guard. Both the click handler and the Enter-key handler call
+  // this function directly, so disabling sendBtn alone isn't enough — a
+  // user can still mash Enter while a request is mid-flight and accidentally
+  // burn through their quota. Bail out if the button is already disabled.
+  if (sendBtn.disabled) return;
+
+  const message = userInput.value.trim();
+  if (!message) return;
+
+  // Remove welcome state on first message
+  removeWelcomeState();
+
+  // Generate a conv_id on the very first message of a fresh conversation.
+  // Subsequent messages in the same turn share the same id so the KV entry
+  // is updated in place instead of creating a new one each turn.
+  if (!currentConvId) {
+    currentConvId = makeConvId();
+    console.log('[conv] new conversation', currentConvId);
+  }
+
+  // Push user message to history and UI
+  chatHistory.push({ role: 'user', content: message });
+  addMessage('user', message);
+  userInput.value = '';
+  // Disable only the send button while streaming. The input field stays
+  // active so users can type their next question while waiting for the
+  // current answer. The in-flight guard at the top of sendMessage()
+  // (combined with sendBtn.disabled) blocks accidental Enter-key sends.
+  sendBtn.disabled = true;
+  updateHistoryIndicator();
+
+  // Mint a reply_id for the assistant reply we're about to receive. This
+  // binds any future 👍/👎 rating back to the exact D1 chat_logs row.
+  const pendingReplyId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : ('r-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10));
+
+  // Build the assistant bubble shell up front so we can stream into it
+  const assistantWrap = document.createElement('div');
+  assistantWrap.className = 'msg assistant';
+  assistantWrap.dataset.replyId = pendingReplyId;
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+
+  // Status line lives INSIDE the bubble while streaming, replaced by text
+  const statusEl = document.createElement('div');
+  statusEl.className = 'status streaming-status';
+  statusEl.textContent = '正在翻箱倒柜找旧信...';
+  bubble.appendChild(statusEl);
+
+  assistantWrap.appendChild(bubble);
+  messagesDiv.appendChild(assistantWrap);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  // Background rotator for the status line — runs autonomously until the
+  // text display is committed. Server-side `status` events are intentionally
+  // ignored (see handleSseEvent below) so this client rotator stays in
+  // charge of the visual feedback. Earlier the server's first status event
+  // would lock the rotator and the user only ever saw one frozen phrase.
+  const waitingPhrases = [
+    '正在翻箱倒柜找旧信...',
+    '正在偷翻小纸条...',
+    '正在和查理芒格交头接耳...',
+    '让我想想写在哪封信里了...',
+    '正在仔细重读这封信...',
+    '顺藤摸瓜，找到更多线索...',
+    '要用最简单的话说清楚...',
+  ];
+  const ROTATE_MS = 1100;
+  let waitIdx = 0;
+  const waitTimer = setInterval(() => {
+    waitIdx = (waitIdx + 1) % waitingPhrases.length;
+    statusEl.textContent = waitingPhrases[waitIdx];
+  }, ROTATE_MS);
+
+  // Streaming state
+  let accumulatedText = '';
+  let textStarted = false;
+  let renderScheduled = false;
+  let streamEnded = false;  // set true BEFORE final clean render so any
+                            // in-flight rAF callback knows to skip itself
+                            // (otherwise the blinking cursor from a last
+                            // delta re-appears after the final render)
+  let lastMeta = null;
+
+  // Schedule a re-render at most once per animation frame to avoid thrash
+  const scheduleRender = () => {
+    if (renderScheduled) return;
+    renderScheduled = true;
+    requestAnimationFrame(() => {
+      renderScheduled = false;
+      if (streamEnded) return;
+      bubble.innerHTML = renderMarkdown(accumulatedText) +
+        '<span class="cursor-blink">▍</span>';
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+  };
+
+  // Minimum time the status line must remain visible before any answer
+  // text is allowed to render. Both the streaming and non-streaming paths
+  // honor this so the rotating status feels intentional rather than a
+  // flicker. If the answer comes back faster than this, we buffer it.
+  const MIN_STATUS_MS = 2000;
+  let minStatusReached = false;
+
+  /** Switch from "rotating status" mode to "rendering answer text" mode.
+   *  Idempotent — safe to call from multiple code paths. */
+  const commitTextDisplay = () => {
+    if (textStarted) return;
+    textStarted = true;
+    if (statusEl.parentNode) statusEl.parentNode.removeChild(statusEl);
+    clearInterval(waitTimer);
+    scheduleRender();
+  };
+
+  setTimeout(() => {
+    minStatusReached = true;
+    // If text has already arrived but was held back, commit it now.
+    if (!textStarted && accumulatedText) commitTextDisplay();
+  }, MIN_STATUS_MS);
+
+  /** Promise-based wait used by the non-streaming path: resolves when the
+   *  minimum status display time has elapsed. */
+  const waitForMinStatus = () =>
+    new Promise((resolve) => {
+      if (minStatusReached) return resolve();
+      const tick = () => {
+        if (minStatusReached) resolve();
+        else setTimeout(tick, 50);
+      };
+      tick();
+    });
+
+  // Parse SSE events from a rolling buffer
+  let sseBuffer = '';
+  const handleSseChunk = (chunk) => {
+    sseBuffer += chunk;
+    let sep;
+    while ((sep = sseBuffer.indexOf('\n\n')) !== -1) {
+      const rawEvent = sseBuffer.slice(0, sep);
+      sseBuffer = sseBuffer.slice(sep + 2);
+      let eventName = 'message';
+      const dataLines = [];
+      for (const line of rawEvent.split('\n')) {
+        if (line.startsWith('event: ')) eventName = line.slice(7).trim();
+        else if (line.startsWith('data: ')) dataLines.push(line.slice(6));
+        else if (line.startsWith('data:')) dataLines.push(line.slice(5));
+      }
+      if (dataLines.length === 0) continue;
+      let payload;
+      try {
+        payload = JSON.parse(dataLines.join('\n'));
+      } catch (e) {
+        console.warn('Failed to parse SSE payload:', dataLines.join('\n'));
+        continue;
+      }
+      handleSseEvent(eventName, payload);
+    }
+  };
+
+  const handleSseEvent = (eventName, payload) => {
+    if (eventName === 'status') {
+      // Intentionally ignored. The server emits its own phase phrases
+      // ("正在搜索...", "正在阅读..."), but they would freeze our client
+      // rotator on a single string for the rest of the wait, defeating
+      // the rotating-status UX. The client phrases below already convey
+      // the same vibe ("正在偷翻小纸条..." etc).
+      return;
+    } else if (eventName === 'delta') {
+      // Always accumulate the text into the buffer. If the minimum status
+      // display window has elapsed, commit + render now; otherwise the
+      // text is held silently and the minStatusTimer will commit it when
+      // the window expires.
+      accumulatedText += payload.text || '';
+      if (minStatusReached) {
+        commitTextDisplay();
+        scheduleRender();
+      }
+    } else if (eventName === 'replace') {
+      // Server detected an output-layer leak or safety issue and wants us
+      // to discard what we've rendered so far and show a safe fallback.
+      accumulatedText = payload.text || '';
+      if (minStatusReached) {
+        commitTextDisplay();
+        scheduleRender();
+      }
+    } else if (eventName === 'done') {
+      lastMeta = payload;
+    } else if (eventName === 'error') {
+      throw new Error(payload.error || 'stream error');
+    }
+  };
+
+  // Detect environments where streaming doesn't work reliably.
+  // iOS Safari on cellular networks + some Chinese carriers buffer SSE
+  // responses entirely. We persist a flag in localStorage once we've fallen
+  // back successfully, so subsequent requests go straight to non-stream.
+  const STREAM_BROKEN_KEY = 'buffett_ai_stream_broken_v1';
+  const streamBroken = (() => {
+    try { return localStorage.getItem(STREAM_BROKEN_KEY) === '1'; }
+    catch (e) { return false; }
+  })();
+
+  // --- Non-streaming fallback (used when stream hangs or is known-broken) ---
+  const runNonStream = async () => {
+    console.log('[chat] using non-stream endpoint');
+    // Don't lock the status line here — non-stream has no SSE status
+    // events to conflict with, and leaving it unlocked lets waitTimer
+    // continue rotating phrases while the request is in flight.
+    const res = await fetch(`${getApiUrl()}/api/chat`, {
+      method: 'POST',
+      headers: chatRequestHeaders(),
+      body: JSON.stringify({ messages: chatHistory, conv_id: currentConvId, reply_id: pendingReplyId }),
+    });
+    applyRateHeaders(res);
+
+    if (res.status === 429) {
+      clearInterval(waitTimer);
+      const err = await res.json().catch(() => ({ error: '今日免费次数已用完' }));
+      bubble.innerHTML = renderExhaustedMsg(err.error);
+      wireBuyCta(bubble);
+      chatHistory.pop();
+      updateHistoryIndicator();
+      return;
+    }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: res.statusText }));
+      throw new Error(err.error || res.statusText);
+    }
+
+    const data = await res.json();
+
+    // Honor MIN_STATUS_MS so the rotating "正在偷翻小纸条..." text gets at
+    // least one full read even when the answer comes back in <2s.
+    await waitForMinStatus();
+
+    clearInterval(waitTimer);
+    if (statusEl.parentNode) statusEl.parentNode.removeChild(statusEl);
+
+    bubble.innerHTML = renderMarkdown(data.reply || '');
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'meta';
+    metaDiv.style.display = 'none';
+    const tk = data.tokens_used || {};
+    const sources = data.sources || [];
+    metaDiv.textContent = `工具调用: ${data.tool_calls || 0}次 | Token: ${tk.input || 0} in + ${tk.output || 0} out | 来源: ${sources.join(', ') || '无'}`;
+    assistantWrap.appendChild(metaDiv);
+    if (!data.blocked) renderRatingBar(assistantWrap, pendingReplyId);
+
+    chatHistory.push({ role: 'assistant', content: data.reply || '', reply_id: pendingReplyId });
+    updateHistoryIndicator();
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    // Refresh the saved conversations list so the new one appears
+    loadRecentConvs();
+  };
+
+  // Previously we skipped streaming on mobile, but testing showed the
+  // opposite: mobile needs streaming MORE than desktop, because carriers
+  // kill idle POST connections after ~10s of silence. Streaming keeps the
+  // connection active with padding + status events. So only skip stream
+  // if a prior attempt explicitly failed on this device.
+  if (streamBroken) {
+    try { await runNonStream(); }
+    catch (err) {
+      clearInterval(waitTimer);
+      if (statusEl.parentNode) statusEl.parentNode.removeChild(statusEl);
+      bubble.innerHTML = `<div class="status">出错了: ${(err && err.message) || err}</div>`;
+      chatHistory.pop();
+      updateHistoryIndicator();
+    } finally {
+      sendBtn.disabled = false;
+      userInput.focus();
+    }
+    return;
+  }
+
+  // --- Streaming path with first-byte timeout + auto-fallback ---
+  try {
+    console.log('[stream] fetching');
+    // Abort controller + 12-second first-byte timer. If no data has arrived
+    // in 12 seconds, we abort and fall back to the non-stream endpoint.
+    const abortController = new AbortController();
+    let anyDataReceived = false;
+    const firstByteTimer = setTimeout(() => {
+      if (!anyDataReceived) {
+        console.warn('[stream] first-byte timeout, aborting');
+        abortController.abort();
+      }
+    }, 12000);
+
+    const res = await fetch(`${getApiUrl()}/api/chat/stream`, {
+      method: 'POST',
+      headers: chatRequestHeaders(),
+      body: JSON.stringify({ messages: chatHistory, conv_id: currentConvId, reply_id: pendingReplyId }),
+      signal: abortController.signal,
+    });
+    console.log('[stream] fetch resolved, status', res.status);
+
+    // Always read rate-limit headers, whether the request succeeded or 429'd
+    applyRateHeaders(res);
+
+    if (res.status === 429) {
+      // Friendly rate-limit denial — show message, don't add to history
+      clearTimeout(firstByteTimer);
+      clearInterval(waitTimer);
+      const err = await res.json().catch(() => ({ error: '今日免费次数已用完' }));
+      bubble.innerHTML = renderExhaustedMsg(err.error);
+      wireBuyCta(bubble);
+      chatHistory.pop();
+      updateHistoryIndicator();
+      return;
+    }
+
+    if (!res.ok || !res.body) {
+      clearTimeout(firstByteTimer);
+      const err = await res.json().catch(() => ({ error: res.statusText }));
+      throw new Error(err.error || res.statusText);
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (!anyDataReceived) {
+          anyDataReceived = true;
+          clearTimeout(firstByteTimer);
+          console.log('[stream] first byte received');
+        }
+        handleSseChunk(decoder.decode(value, { stream: true }));
+      }
+    } catch (readErr) {
+      if ((readErr.name === 'AbortError' || readErr.message?.includes('abort')) && !anyDataReceived) {
+        // Stream stalled — mark as broken for this device and fall back
+        console.warn('[stream] aborted with no data, falling back to non-stream');
+        try { localStorage.setItem(STREAM_BROKEN_KEY, '1'); } catch (e) {}
+        clearInterval(waitTimer);
+        await runNonStream();
+        return;
+      }
+      throw readErr;
+    }
+    // Flush any trailing data after stream end
+    if (sseBuffer.trim()) handleSseChunk('\n\n');
+
+    // Honor MIN_STATUS_MS even when the entire stream finishes in <2s.
+    // Without this, the rotating status would flash for a fraction of a
+    // second and the answer would appear instantly, defeating the purpose
+    // of the rotator. waitForMinStatus also gives the buffered delta a
+    // chance to be committed via the minStatusTimer.
+    await waitForMinStatus();
+
+    clearInterval(waitTimer);
+    if (statusEl.parentNode) statusEl.parentNode.removeChild(statusEl);
+
+    if (!accumulatedText) {
+      // No delta ever arrived — show fallback
+      bubble.innerHTML = '<div class="status">没有收到回答内容，请重试。</div>';
+      chatHistory.pop();
+      updateHistoryIndicator();
+      return;
+    }
+
+    // Final render (no cursor) — re-runs makeConceptsClickable on the
+    // complete text so all auto-links land in their final positions.
+    // Set streamEnded FIRST so any in-flight rAF callback aborts.
+    streamEnded = true;
+    bubble.innerHTML = renderMarkdown(accumulatedText);
+
+    // Append meta footer if we got a done event
+    if (lastMeta) {
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'meta';
+    metaDiv.style.display = 'none';
+      const tk = lastMeta.tokens_used || {};
+      const sources = lastMeta.sources || [];
+      metaDiv.textContent = `工具调用: ${lastMeta.tool_calls || 0}次 | Token: ${tk.input || 0} in + ${tk.output || 0} out | 来源: ${sources.join(', ') || '无'}`;
+      assistantWrap.appendChild(metaDiv);
+    }
+
+    // Show rating buttons unless the reply was safety-blocked
+    if (!(lastMeta && lastMeta.blocked)) {
+      renderRatingBar(assistantWrap, pendingReplyId);
+    }
+
+    // Push final assistant text to history
+    chatHistory.push({ role: 'assistant', content: accumulatedText, reply_id: pendingReplyId });
+    updateHistoryIndicator();
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    // Refresh the saved conversations list so the new one appears
+    loadRecentConvs();
+  } catch (err) {
+    // Last-ditch fallback: if the streaming path threw for any other reason
+    // AND nothing had been rendered yet, try the non-stream endpoint once
+    // before showing an error to the user.
+    if (!accumulatedText && !lastMeta && !(err && err.message && err.message.includes('今日免费'))) {
+      try {
+        console.warn('[stream] error, falling back to non-stream:', err && err.message);
+        await runNonStream();
+        try { localStorage.setItem(STREAM_BROKEN_KEY, '1'); } catch (e) {}
+        return;
+      } catch (fallbackErr) {
+        err = fallbackErr;
+      }
+    }
+    clearInterval(waitTimer);
+    if (statusEl.parentNode) statusEl.parentNode.removeChild(statusEl);
+    bubble.innerHTML = `<div class="status">出错了: ${(err && err.message) || err}</div>`;
+    // Roll back the failed user message
+    chatHistory.pop();
+    updateHistoryIndicator();
+  } finally {
+    sendBtn.disabled = false;
+    userInput.focus();
+  }
+}
+
+function addMessage(role, text, meta, replyId) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+
+  if (role === 'assistant') {
+    bubble.innerHTML = renderMarkdown(text);
+  } else {
+    bubble.textContent = text;
+  }
+
+  div.appendChild(bubble);
+
+  if (meta) {
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'meta';
+    metaDiv.style.display = 'none';
+    metaDiv.textContent = `工具调用: ${meta.tool_calls}次 | Token: ${meta.tokens_used?.input || 0} in + ${meta.tokens_used?.output || 0} out | 来源: ${(meta.sources || []).join(', ') || '无'}`;
+    div.appendChild(metaDiv);
+  }
+
+  messagesDiv.appendChild(div);
+  if (role === 'assistant' && replyId) {
+    div.dataset.replyId = replyId;
+    renderRatingBar(div, replyId);
+  }
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// ==================== Preview panel ====================
+async function openPreviewByTitle(title) {
+  if (!titlesMap || !titlesMap[title]) {
+    openPreviewError(title, '这个词在知识库中没有对应页面');
+    return;
+  }
+  const entry = titlesMap[title];
+  await openPreviewByPath(entry.path);
+}
+
+async function openPreviewByPath(path) {
+  if (!path) {
+    console.warn('openPreviewByPath called with empty path');
+    return;
+  }
+
+  // Tag this request so stale responses from older requests can be discarded
+  const requestId = ++currentPreviewRequestId;
+  console.log('[openPreviewByPath] #%d path=%s', requestId, path);
+
+  // Push to history if different from current
+  const current = previewEl.dataset.currentPath;
+  if (current && current !== path) {
+    previewHistory.push(current);
+    document.body.classList.add('has-history');
+  }
+  previewEl.dataset.currentPath = path;
+
+  // Push a browser history entry the FIRST time the preview opens, so the
+  // browser back button closes the preview instead of leaving the site.
+  // Subsequent navigations within the preview (recursive concept clicks)
+  // don't push additional entries — they all share the single slot, so one
+  // back press always closes the whole preview.
+  if (!document.body.classList.contains('preview-open')) {
+    try {
+      history.pushState({ preview: true }, '', location.href);
+    } catch (e) {
+      console.warn('[preview] pushState failed:', e);
+    }
+  }
+
+  document.body.classList.add('preview-open');
+  previewContent.innerHTML = '<div class="preview-loading">正在加载...</div>';
+  previewType.textContent = '';
+  previewTitle.textContent = '加载中';
+  previewEnglish.textContent = '';
+
+  // Fetch with a 10s timeout so we never hang indefinitely
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => {
+    console.warn('[openPreviewByPath] #%d timeout, aborting', requestId);
+    controller.abort();
+  }, 10000);
+
+  try {
+    const url = `${getApiUrl()}/api/file?path=${encodeURIComponent(path)}`;
+    console.log('[openPreviewByPath] #%d fetching %s', requestId, url);
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    // Discard if a newer request has started while we were waiting
+    if (requestId !== currentPreviewRequestId) {
+      console.log('[openPreviewByPath] #%d stale, discarding', requestId);
+      return;
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    if (requestId !== currentPreviewRequestId) {
+      console.log('[openPreviewByPath] #%d stale after json, discarding', requestId);
+      return;
+    }
+    if (!data.content) throw new Error('空响应');
+    renderPreview(path, data.content);
+    console.log('[openPreviewByPath] #%d done', requestId);
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (requestId !== currentPreviewRequestId) {
+      console.log('[openPreviewByPath] #%d error but stale, ignoring:', err.message);
+      return;
+    }
+    const msg = err && err.name === 'AbortError' ? '请求超时（10秒）' : (err && err.message || String(err));
+    console.error('[openPreviewByPath] #%d failed:', msg);
+    openPreviewError(path, `加载失败: ${msg}`);
+  }
+}
+
+function openPreviewError(title, msg) {
+  document.body.classList.add('preview-open');
+  previewType.textContent = '';
+  previewTitle.textContent = title;
+  previewEnglish.textContent = '';
+  previewContent.innerHTML = `<p style="color:#c33">${escapeHtml(msg)}</p>`;
+}
+
+function renderPreview(path, content) {
+  console.log('[renderPreview] path=%s, length=%d', path, content.length);
+
+  // Extract frontmatter info (best-effort)
+  let title = path;
+  let english = '';
+  let type = '';
+  try {
+    const fmMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (fmMatch) {
+      const fm = fmMatch[1];
+      const titleM = fm.match(/title:\s*"?([^"\n]*)"?/);
+      const engM = fm.match(/english:\s*"?([^"\n]*)"?/);
+      const typeM = fm.match(/type:\s*"?([^"\n]*)"?/);
+      if (titleM) title = titleM[1].trim();
+      if (engM) english = engM[1].trim();
+      if (typeM) type = typeM[1].trim();
+    }
+  } catch (err) {
+    console.warn('[renderPreview] frontmatter parse failed:', err);
+  }
+
+  previewType.textContent = type || path.split('/')[0];
+  previewTitle.textContent = title;
+  previewEnglish.textContent = english;
+
+  // Render markdown with error guard
+  try {
+    const html = renderMarkdown(content, { stripFM: true });
+    // Detect "empty" content: nothing meaningful after stripping frontmatter and tags
+    const plainTextLength = html.replace(/<[^>]+>/g, '').trim().length;
+    if (plainTextLength < 10) {
+      console.warn('[renderPreview] content appears empty after rendering. Raw content length=%d, rendered text=%d',
+        content.length, plainTextLength);
+      previewContent.innerHTML =
+        `<p style="color:#888;font-style:italic">这个页面看起来内容很少（仅 ${plainTextLength} 字符）。</p>` +
+        `<details style="margin-top:1rem"><summary style="cursor:pointer;color:#888">显示原始 Markdown</summary>` +
+        `<pre style="white-space:pre-wrap;color:#666;font-size:0.78em;background:#f5f0e6;padding:0.5rem;margin-top:0.5rem;border-radius:4px;max-height:50vh;overflow:auto">${escapeHtml(content)}</pre>` +
+        `</details>`;
+    } else {
+      previewContent.innerHTML = html;
+    }
+    console.log('[renderPreview] ok, html=%d chars, plain text=%d chars', html.length, plainTextLength);
+  } catch (err) {
+    console.error('[renderPreview] render failed:', err);
+    previewContent.innerHTML =
+      `<p style="color:#c33">渲染失败: ${escapeHtml(err.message || String(err))}</p>` +
+      `<pre style="white-space:pre-wrap;color:#888;font-size:0.8em;max-height:40vh;overflow:auto">${escapeHtml(content.slice(0, 2000))}</pre>`;
+  }
+  previewContent.scrollTop = 0;
+}
+
+function closePreview(triggeredByPopstate) {
+  const wasOpen = document.body.classList.contains('preview-open');
+  document.body.classList.remove('preview-open');
+  document.body.classList.remove('has-history');
+  previewHistory.length = 0;
+  delete previewEl.dataset.currentPath;
+
+  // If the close was user-initiated (X button, Esc, backdrop click), we
+  // need to pop our own history entry so the next back press behaves
+  // correctly. When popstate triggers the close, the entry is already
+  // gone from the stack, so we must NOT call history.back() again.
+  if (!triggeredByPopstate && wasOpen && history.state && history.state.preview) {
+    try {
+      history.back();
+    } catch (e) {
+      console.warn('[preview] history.back() failed:', e);
+    }
+  }
+}
+
+function goBackPreview() {
+  if (previewHistory.length === 0) return;
+  const prev = previewHistory.pop();
+  if (previewHistory.length === 0) document.body.classList.remove('has-history');
+  previewEl.dataset.currentPath = ''; // prevent pushing current onto history again
+  openPreviewByPath(prev);
+}
+
+// ==================== History dropdown ====================
+/** Format a unix-ms timestamp as a compact relative string. */
+function formatConvTime(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - ts;
+  if (diff < 60_000) return '刚刚';
+  if (diff < 3600_000) return Math.floor(diff / 60_000) + ' 分钟前';
+  if (diff < 86400_000) return Math.floor(diff / 3600_000) + ' 小时前';
+  if (diff < 7 * 86400_000) return Math.floor(diff / 86400_000) + ' 天前';
+  const d = new Date(ts);
+  return `${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function renderHistoryList() {
+  if (!historyDropdownList) return;
+  if (!recentConvs || recentConvs.length === 0) {
+    historyDropdownList.innerHTML = '<div class="history-empty">还没有保存的对话</div>';
+    return;
+  }
+  historyDropdownList.innerHTML = recentConvs
+    .map((c) => {
+      const title = (c.title || '新对话').replace(/[<>&]/g, (ch) =>
+        ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : '&amp;'
+      );
+      const timeStr = formatConvTime(c.updated_at);
+      const msgCount = c.message_count ? `${c.message_count} 条消息` : '';
+      const meta = [timeStr, msgCount].filter(Boolean).join(' · ');
+      return (
+        `<div class="history-item" data-conv-id="${c.id}">` +
+        `<div class="history-item-title">${title}</div>` +
+        `<div class="history-item-meta">${meta}</div>` +
+        `</div>`
+      );
+    })
+    .join('');
+}
+
+function showHistoryDropdown() {
+  if (!historyDropdown) return;
+  loadRecentConvs(); // refresh right before showing
+  historyDropdown.hidden = false;
+}
+
+function hideHistoryDropdown() {
+  if (historyDropdown) historyDropdown.hidden = true;
+}
+
+function toggleHistoryDropdown() {
+  if (!historyDropdown) return;
+  if (historyDropdown.hidden) showHistoryDropdown();
+  else hideHistoryDropdown();
+}
+
+// ==================== Event listeners ====================
+sendBtn.addEventListener('click', sendMessage);
+newChatBtn.addEventListener('click', clearChat);
+userInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+// ==================== Redemption modal wiring ====================
+function openRedeemModal() {
+  if (!redeemModal) return;
+  redeemFeedback.textContent = '';
+  redeemFeedback.className = 'modal-feedback';
+  redeemInput.value = paidCode || '';
+  redeemModal.hidden = false;
+  setTimeout(() => redeemInput.focus(), 50);
+}
+function closeRedeemModal() {
+  if (redeemModal) redeemModal.hidden = true;
+}
+async function submitRedeem() {
+  const raw = (redeemInput.value || '').trim();
+  if (!raw) {
+    redeemFeedback.textContent = '请输入密码条';
+    redeemFeedback.className = 'modal-feedback error';
+    return;
+  }
+  redeemSubmit.disabled = true;
+  redeemFeedback.textContent = '验证中...';
+  redeemFeedback.className = 'modal-feedback';
+  try {
+    const res = await fetch(`${getApiUrl()}/api/redeem`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: raw }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      // Save the code locally and refresh the indicator
+      savePaidCode(raw.toUpperCase().replace(/[^A-Z0-9-]/g, ''));
+      rateState.paid = data.credits_remaining || 0;
+      // validateCode already returns total_credits — capture it so the
+      // toolbar can render "已购 X / Y" instead of just "已购 X 次".
+      if (typeof data.total_credits === 'number' && data.total_credits > 0) {
+        rateState.paidTotal = data.total_credits;
+      }
+      renderRateIndicator();
+      redeemFeedback.textContent =
+        `✓ 兑换成功！你现在有 ${data.credits_remaining} 次对话，跨设备共享`;
+      redeemFeedback.className = 'modal-feedback success';
+      setTimeout(closeRedeemModal, 1500);
+    } else {
+      redeemFeedback.textContent = data.error || '兑换失败';
+      redeemFeedback.className = 'modal-feedback error';
+    }
+  } catch (e) {
+    redeemFeedback.textContent = '网络错误: ' + (e.message || e);
+    redeemFeedback.className = 'modal-feedback error';
+  } finally {
+    redeemSubmit.disabled = false;
+  }
+}
+
+if (redeemBtn) redeemBtn.addEventListener('click', openRedeemModal);
+if (redeemCancel) redeemCancel.addEventListener('click', closeRedeemModal);
+if (redeemClose) redeemClose.addEventListener('click', closeRedeemModal);
+if (redeemSubmit) redeemSubmit.addEventListener('click', submitRedeem);
+
+// ==================== 429 exhausted message (with buy CTA) ====================
+// Payment launched in v0.15.0 (2026-04-17) — gate fully open.
+const BUY_ENABLED = true;
+
+function renderExhaustedMsg(baseMsg) {
+  const msg = baseMsg || '今日免费次数已用完';
+  const hasPaid = (rateState.paid || 0) > 0;
+  const cta = (BUY_ENABLED && !hasPaid)
+    ? `<div style="margin-top:12px"><button type="button" class="buy-cta-inline" data-buy-trigger>💳 购买 20 次 · ¥9 立即继续</button>
+       <div style="font-size:11px;color:#9b8b61;margin-top:6px">买断制，次数不过期；也可明天早上继续聊（免费 5 次/天）</div></div>`
+    : '';
+  return `<div class="status exhausted-msg">${escapeHtml(msg)}${cta}</div>`;
+}
+// Surface the buy button only when the flow is enabled.
+if (BUY_ENABLED && buyBtn) buyBtn.style.display = '';
+const buyOrdersLink = $('buy-orders-link');
+if (BUY_ENABLED && buyOrdersLink) buyOrdersLink.style.display = '';
+function wireBuyCta(container) {
+  if (!container) return;
+  const btn = container.querySelector('[data-buy-trigger]');
+  if (btn) btn.addEventListener('click', openBuyModal);
+}
+
+// ==================== Buy (Hupijiao) modal wiring ====================
+let buyPollTimer = null;
+let buyOrderNo = null;
+
+function showBuyStage(which) {
+  for (const el of [buyStageInit, buyStagePay, buyStageDone]) {
+    if (el) el.hidden = true;
+  }
+  const target = which === 'pay' ? buyStagePay : which === 'done' ? buyStageDone : buyStageInit;
+  if (target) target.hidden = false;
+}
+const buyPill = $('buy-pill');
+const buyPillMeta = $('buy-pill-meta');
+
+function showBuyPill(order) {
+  if (!buyPill || !order) return;
+  buyPill.hidden = false;
+  buyPill.classList.remove('paid');
+  const title = buyPill.querySelector('.buy-pill-title');
+  if (title) title.textContent = '支付中';
+  const icon = buyPill.querySelector('.buy-pill-icon');
+  if (icon) icon.textContent = '⏳';
+  buyPillMeta.textContent = order.order_no;
+}
+function showBuyPillPaid() {
+  if (!buyPill) return;
+  buyPill.hidden = false;
+  buyPill.classList.add('paid');
+  const title = buyPill.querySelector('.buy-pill-title');
+  if (title) title.textContent = '支付完成';
+  const icon = buyPill.querySelector('.buy-pill-icon');
+  if (icon) icon.textContent = '✓';
+  buyPillMeta.textContent = '点此查看密码条';
+}
+function hideBuyPill() {
+  if (!buyPill) return;
+  buyPill.hidden = true;
+}
+
+function openBuyModal() {
+  if (!buyModal) return;
+  stopBuyPoll();
+  buyOrderNo = null;
+  if (buyFeedback) { buyFeedback.textContent = ''; buyFeedback.className = 'modal-feedback'; }
+  showBuyStage('init');
+  buyModal.hidden = false;
+  hideBuyPill(); // modal shown, pill hidden
+}
+function closeBuyModal() {
+  // If there's an active pending order, MINIMIZE to pill instead of closing.
+  const pending = activePendingOrder();
+  if (pending && buyOrderNo === pending.order_no) {
+    // keep polling in background, just hide the modal and show pill
+    if (buyModal) buyModal.hidden = true;
+    showBuyPill(pending);
+    return;
+  }
+  // Otherwise it's a fully closed modal (done state or not-started)
+  stopBuyPoll();
+  if (buyModal) buyModal.hidden = true;
+  hideBuyPill();
+}
+/** Fully abandon the current pending order — stop polling, drop it from
+ *  localStorage so the next buy click starts a fresh order with a fresh
+ *  QR. Server-side the order just ages out to expired after 30 min;
+ *  nothing to do there. Needed because Hupijiao locks a created order
+ *  to the wallet region of the first attempt, so a half-scanned but
+ *  unfinished order can't be re-used with a different WeChat wallet. */
+function abandonBuyOrder() {
+  stopBuyPoll();
+  if (buyOrderNo) {
+    try { removeOrderFromStore(buyOrderNo); } catch {}
+  }
+  buyOrderNo = null;
+  if (buyQr) buyQr.src = '';
+  if (buyPayLink) buyPayLink.href = '#';
+  if (buyCodeBox) buyCodeBox.textContent = '';
+  if (buyFeedback) { buyFeedback.textContent = ''; buyFeedback.className = 'modal-feedback'; }
+  showBuyStage('init');
+  if (buyModal) buyModal.hidden = true;
+  hideBuyPill();
+}
+function stopBuyPoll() {
+  if (buyPollTimer) { clearInterval(buyPollTimer); buyPollTimer = null; }
+}
+
+/**
+ * Take the user into the payment step for `order` (must have pay_url + qr_url).
+ *
+ * Per Hupijiao's API doc, `url_qrcode` is PC-only — WeChat's gallery-scan and
+ * long-press paths block it. The correct mobile flow is to navigate directly
+ * to `url` (our pay_url), which auto-routes to WeChat/H5 and bounces back via
+ * return_url when done. So:
+ *   - Mobile → window.location.href = pay_url. No modal, no QR.
+ *   - PC     → show QR image in the modal + start polling.
+ * Caller should have already persisted the order to localStorage and set
+ * buyOrderNo so resumeOnLoad can find it if the user bounces back.
+ */
+function launchPaymentFor(order) {
+  if (!order) return;
+  if (IS_MOBILE) {
+    if (order.pay_url) {
+      window.location.href = order.pay_url;
+      return;
+    }
+    // If somehow we only have qr_url on mobile, fall through and at least
+    // show a usable page rather than a dead modal.
+  }
+  if (buyQr && order.qr_url) buyQr.src = order.qr_url;
+  if (buyPayLink && order.pay_url) buyPayLink.href = order.pay_url;
+  showBuyStage('pay');
+  if (buyModal) buyModal.hidden = false;
+  hideBuyPill();
+  startBuyPoll();
+}
+async function buyStartFlow() {
+  if (!buyStart) return;
+  buyStart.disabled = true;
+  if (buyFeedback) { buyFeedback.textContent = '创建订单中...'; buyFeedback.className = 'modal-feedback'; }
+  try {
+    const res = await fetch(`${getApiUrl()}/api/purchase/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Fingerprint': FINGERPRINT || '' },
+      body: JSON.stringify({}),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      buyFeedback.textContent = data.error || `下单失败 (${res.status})`;
+      buyFeedback.className = 'modal-feedback error';
+      return;
+    }
+    buyOrderNo = data.order_no;
+    addPendingOrder(data);  // NEW: persist in localStorage
+    launchPaymentFor(data);
+  } catch (e) {
+    buyFeedback.textContent = '网络错误：' + (e.message || e);
+    buyFeedback.className = 'modal-feedback error';
+  } finally {
+    buyStart.disabled = false;
+  }
+}
+function startBuyPoll() {
+  stopBuyPoll();
+  if (!buyOrderNo) return;
+  let elapsed = 0;
+  buyPollTimer = setInterval(async () => {
+    elapsed += 2;
+    if (elapsed > 600) { // 10 minutes
+      stopBuyPoll();
+      if (buyPollStatus) buyPollStatus.textContent = '支付超时，请重新下单';
+      return;
+    }
+    try {
+      // X-Fingerprint MUST be sent — the server only returns the full
+      // `code` when the requester's fingerprint matches the order's
+      // originating fingerprint; otherwise only a masked version is
+      // returned and the poll would never recognise the order as done.
+      const res = await fetch(
+        `${getApiUrl()}/api/purchase/status?order_no=${encodeURIComponent(buyOrderNo)}`,
+        { headers: { 'X-Fingerprint': FINGERPRINT } }
+      );
+      const data = await res.json().catch(() => ({}));
+      if (data.status === 'paid' && data.code) {
+        stopBuyPoll();
+        // Auto-save the code to localStorage so the user can immediately
+        // start chatting without re-entering it.
+        savePaidCode(data.code);
+        rateState.paid = data.credits || 0;
+        rateState.paidTotal = data.credits || 0;
+        renderRateIndicator();
+        if (buyCodeBox) buyCodeBox.textContent = data.code;
+        // Update localStorage with paid state + code
+        updateOrderInStore(buyOrderNo, {
+          last_seen_status: 'paid',
+          issued_code: data.code,
+        });
+        // Show pill in "paid" state — stays until user taps it, so they
+        // don't miss the completion notification.
+        showBuyPillPaid();
+        showBuyStage('done');
+      } else if (data.status === 'failed' || data.status === 'expired') {
+        stopBuyPoll();
+        if (buyPollStatus) buyPollStatus.textContent = `订单 ${data.status}，请重试`;
+        updateOrderInStore(buyOrderNo, { last_seen_status: data.status });
+        hideBuyPill();
+      } else if (buyPollStatus) {
+        buyPollStatus.textContent = `等待支付… (${elapsed}s)`;
+      }
+    } catch { /* keep polling through transient errors */ }
+  }, 2000);
+}
+function copyBuyCode() {
+  const code = buyCodeBox ? buyCodeBox.textContent || '' : '';
+  if (!code) return;
+  navigator.clipboard?.writeText(code).then(() => {
+    const old = buyCopy.textContent;
+    buyCopy.textContent = '已复制 ✓';
+    setTimeout(() => { buyCopy.textContent = old; }, 1500);
+  }).catch(() => alert('复制失败，请手动选中：\n\n' + code));
+}
+
+if (buyBtn) {
+  buyBtn.addEventListener('click', () => {
+    const pending = activePendingOrder();
+    if (pending) {
+      // Resume existing pending order instead of creating a new one
+      buyOrderNo = pending.order_no;
+      launchPaymentFor(pending);
+    } else {
+      openBuyModal();
+    }
+  });
+}
+// Cross-tab storage sync: if another tab marks this order paid or expired,
+// reflect in this tab's pill/modal without a reload.
+window.addEventListener('storage', (e) => {
+  if (e.key !== ORDER_STORE_KEY) return;
+  const pending = activePendingOrder();
+  if (!pending) {
+    // Either no pending anymore, or the one we were tracking just finished.
+    // Check if our current buyOrderNo was resolved.
+    if (buyOrderNo) {
+      const resolved = readOrderStore().find(o => o.order_no === buyOrderNo);
+      if (resolved && resolved.last_seen_status === 'paid' && resolved.issued_code) {
+        stopBuyPoll();
+        if (buyCodeBox) buyCodeBox.textContent = resolved.issued_code;
+        showBuyStage('done');
+        if (buyModal) buyModal.hidden = false;
+        showBuyPillPaid();
+        // Also refresh rate indicator
+        savePaidCode(resolved.issued_code);
+        rateState.paid = resolved.credits || 0;
+        rateState.paidTotal = resolved.credits || 0;
+        renderRateIndicator();
+      }
+    }
+    if (!activePendingOrder()) hideBuyPill();
+  } else {
+    showBuyPill(pending);
+  }
+});
+// "取消" buttons fully abandon the order — X and backdrop just minimize
+// to the pill. Abandoning is important: Hupijiao locks a created order
+// to the first wallet region that scanned it, so a half-started order
+// can't be resumed with a different WeChat (mainland ↔ HK).
+if (buyCancel) buyCancel.addEventListener('click', abandonBuyOrder);
+if (buyCancelPay) buyCancelPay.addEventListener('click', abandonBuyOrder);
+if (buyModalClose) buyModalClose.addEventListener('click', closeBuyModal);
+if (buyStart) buyStart.addEventListener('click', buyStartFlow);
+if (buyCopy) buyCopy.addEventListener('click', copyBuyCode);
+if (buyDoneClose) buyDoneClose.addEventListener('click', closeBuyModal);
+if (buyModal) {
+  buyModal.addEventListener('click', (e) => {
+    if (e.target === buyModal) closeBuyModal(); // minimize (via closeBuyModal) not destroy
+  });
+}
+if (buyPill) {
+  buyPill.addEventListener('click', () => {
+    // Paid state: open the done modal showing the code, then retire the pill.
+    if (buyPill.classList.contains('paid')) {
+      const code = paidCode
+        || (buyCodeBox && buyCodeBox.textContent)
+        || (readOrderStore().find(o => o.last_seen_status === 'paid' && o.issued_code) || {}).issued_code
+        || '';
+      if (buyCodeBox && code) buyCodeBox.textContent = code;
+      showBuyStage('done');
+      if (buyModal) buyModal.hidden = false;
+      hideBuyPill();
+      return;
+    }
+    const pending = activePendingOrder();
+    if (!pending) { hideBuyPill(); return; }
+    buyOrderNo = pending.order_no;
+    launchPaymentFor(pending);
+  });
+}
+
+// Auto-resume any active-pending order on page load + handle ?pay=done redirect.
+(function resumeOnLoad() {
+  if (!BUY_ENABLED) return;
+  try {
+    const sp = new URLSearchParams(window.location.search);
+    // Case 1: Hupijiao redirected back with ?pay=done&o=ORDER — open the modal
+    if (sp.get('pay') === 'done' && sp.get('o')) {
+      buyOrderNo = sp.get('o');
+      const existing = readOrderStore().find(o => o.order_no === buyOrderNo);
+      if (existing) {
+        if (buyQr && existing.qr_url) buyQr.src = existing.qr_url;
+        if (buyPayLink && existing.pay_url) buyPayLink.href = existing.pay_url;
+      }
+      if (buyModal) buyModal.hidden = false;
+      showBuyStage('pay');
+      if (buyPollStatus) buyPollStatus.textContent = '从支付页返回，正在确认结果…';
+      startBuyPoll();
+      history.replaceState(null, '', window.location.pathname);
+      return;
+    }
+    // Case 2: No redirect param, but localStorage has active pending — show pill
+    const pending = activePendingOrder();
+    if (pending) {
+      showBuyPill(pending);
+      // Pre-populate state so clicking the pill resumes cleanly
+      buyOrderNo = pending.order_no;
+      if (buyQr && pending.qr_url) buyQr.src = pending.qr_url;
+      if (buyPayLink && pending.pay_url) buyPayLink.href = pending.pay_url;
+      // Start a background poll (in case modal stays closed — we still want
+      // to detect paid status and flash the pill)
+      startBuyPoll();
+    }
+  } catch { /* noop */ }
+
+  // Case 3: Server-side order recovery (fingerprint-keyed). Survives
+  // localStorage clears, reboots, and cross-tab history loss.
+  //
+  // Rotation rule: only overwrite the active paidCode when it is empty or
+  // exhausted (balance 0). An active code with credits left MUST NOT be
+  // replaced just because a newer paid order exists — that would orphan
+  // the remaining credits. Extra paid codes are surfaced via the
+  // "+N 张待用" tag on the rate indicator so the user can see them.
+  (async () => {
+    try {
+      const r = await fetch('/api/purchase/my-orders', {
+        headers: { 'X-Fingerprint': FINGERPRINT },
+      });
+      if (!r.ok) return;
+      const data = await r.json();
+      if (!data || !Array.isArray(data.orders) || data.orders.length === 0) return;
+      const paidOrders = data.orders
+        .filter(o => o.status === 'paid' && o.code)
+        .sort((a, b) => (b.paid_at || 0) - (a.paid_at || 0));
+      if (paidOrders.length === 0) return;
+
+      // Need current balance before deciding whether to rotate.
+      if (paidCode) { try { await refreshPaidCredits(); } catch {} }
+      const currentBalance = paidCode ? (rateState.paid || 0) : 0;
+
+      if (!paidCode || currentBalance === 0) {
+        // No active code, or current one exhausted — adopt the newest paid
+        // code that isn't the one we already had (in case of rotation).
+        const next = paidOrders.find(o => o.code !== paidCode);
+        if (next && next.code) {
+          savePaidCode(next.code);
+          if (buyCodeBox) buyCodeBox.textContent = next.code;
+          showBuyPillPaid();
+          try { await refreshPaidCredits(); } catch {}
+          // Any still-unused codes after this rotation go in the tag.
+          const others = paidOrders.filter(o => o.code !== next.code && o.code !== paidCode);
+          if (others.length > 0) {
+            rateState.unusedExtraCodes = others.length;
+            renderRateIndicator();
+          }
+        }
+        return;
+      }
+
+      // Current code still has credits — do NOT overwrite. Just expose the
+      // count of other paid codes so the user knows they exist.
+      const others = paidOrders.filter(o => o.code !== paidCode);
+      if (others.length > 0) {
+        rateState.unusedExtraCodes = others.length;
+        renderRateIndicator();
+      }
+    } catch { /* offline or endpoint down — silently degrade */ }
+  })();
+})();
+if (redeemInput) {
+  redeemInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); submitRedeem(); }
+  });
+}
+if (redeemModal) {
+  redeemModal.addEventListener('click', (e) => {
+    if (e.target === redeemModal) closeRedeemModal();
+  });
+}
+// On page load, if we have a saved paid code, refresh the balance
+if (paidCode) setTimeout(refreshPaidCredits, 400);
+
+// History button toggles dropdown; clicking a history item loads the conv
+if (historyBtn) {
+  historyBtn.addEventListener('click', (e) => {
+    e.stopPropagation();  // prevent the document click from closing it
+    toggleHistoryDropdown();
+  });
+}
+if (historyDropdownList) {
+  historyDropdownList.addEventListener('click', (e) => {
+    const item = e.target.closest('.history-item');
+    if (!item) return;
+    const id = item.dataset.convId;
+    if (id) loadConversationById(id);
+  });
+}
+// Click outside the dropdown closes it
+document.addEventListener('click', (e) => {
+  if (
+    historyDropdown &&
+    !historyDropdown.hidden &&
+    !historyDropdown.contains(e.target) &&
+    e.target !== historyBtn
+  ) {
+    hideHistoryDropdown();
+  }
+});
+
+previewClose.addEventListener('click', () => closePreview());
+previewBack.addEventListener('click', goBackPreview);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.body.classList.contains('preview-open')) {
+    closePreview();
+  }
+});
+
+// Browser back button (especially critical on mobile, where the preview
+// is full-screen and users naturally expect "back" to close it instead
+// of navigating away from the entire site).
+window.addEventListener('popstate', () => {
+  if (document.body.classList.contains('preview-open')) {
+    closePreview(true);
+  }
+});
+
+// Click the transparent backdrop (desktop only — it covers the main chat
+// area when the preview is open) to close the panel.
+const previewBackdrop = document.getElementById('preview-backdrop');
+if (previewBackdrop) {
+  previewBackdrop.addEventListener('click', () => closePreview());
+}
+
+/** Safely invoke an async preview opener, logging any rejection. */
+function safeOpen(promise, label) {
+  Promise.resolve(promise).catch((err) => {
+    console.error(`[${label}] unhandled error:`, err);
+    openPreviewError(label, `出错了: ${err && err.message || err}`);
+  });
+}
+
+// Delegate clicks for both wiki-link anchors and clickable strongs
+document.addEventListener('click', (e) => {
+  // 1. Wiki-link anchors (from file content like [[护城河]])
+  const link = e.target.closest('a.concept-link');
+  if (link) {
+    e.preventDefault();
+    e.stopPropagation();
+    const title = link.dataset.title;
+    const path = link.dataset.path;
+    console.log('[click a.concept-link]', { title, path });
+    if (path) safeOpen(openPreviewByPath(path), path);
+    else if (title) safeOpen(openPreviewByTitle(title), title);
+    return;
+  }
+
+  // 2. Clickable strongs (from **bold** that matches a known title)
+  const strong = e.target.closest('strong.concept-strong');
+  if (strong) {
+    e.preventDefault();
+    e.stopPropagation();
+    const title = strong.dataset.title;
+    console.log('[click strong.concept-strong]', { title });
+    if (title) safeOpen(openPreviewByTitle(title), title);
+    return;
+  }
+});
+
+// Reload titles if API URL changes
+
+// ==================== Rating bar ====================
+// localStorage cache so the user sees their own ratings even if the server
+// call failed, and so they can toggle/edit without another round-trip.
+const RATING_CACHE_PREFIX = 'rating:';
+
+function loadRatingFromCache(replyId) {
+  try {
+    const raw = localStorage.getItem(RATING_CACHE_PREFIX + replyId);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+function saveRatingToCache(replyId, rating, reason) {
+  try {
+    if (rating === null) localStorage.removeItem(RATING_CACHE_PREFIX + replyId);
+    else localStorage.setItem(RATING_CACHE_PREFIX + replyId, JSON.stringify({ rating, reason: reason || '' }));
+  } catch (e) {}
+}
+
+// Fire-and-forget POST /api/rating with one silent retry. Never throws,
+// never shows a toast — must not interrupt the user.
+async function postRating(replyId, rating, reason) {
+  const body = JSON.stringify({ reply_id: replyId, rating, reason: reason || '' });
+  const opts = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Fingerprint': FINGERPRINT },
+    body,
+  };
+  try {
+    const r = await fetch(`${getApiUrl()}/api/rating`, opts);
+    if (r.ok) return true;
+  } catch (e) {}
+  await new Promise(rs => setTimeout(rs, 1000));
+  try {
+    const r = await fetch(`${getApiUrl()}/api/rating`, opts);
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+function renderRatingBar(container, replyId) {
+  if (!replyId) return;
+  if (container.querySelector('.rating-bar')) return;
+  const bar = document.createElement('div');
+  bar.className = 'rating-bar';
+  bar.innerHTML = `
+    <button type="button" class="rating-btn up"   aria-label="好评" title="好评">👍</button>
+    <button type="button" class="rating-btn down" aria-label="差评" title="差评">👎</button>
+    <button type="button" class="share-btn" aria-label="分享" title="分享">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/>
+        <polyline points="16 6 12 2 8 6"/>
+        <line x1="12" y1="2" x2="12" y2="15"/>
+      </svg>
+      <span>分享</span>
+    </button>
+  `;
+  container.appendChild(bar);
+  const cached = loadRatingFromCache(replyId);
+  if (cached) applyRatingState(bar, cached.rating);
+  bar.querySelector('.rating-btn.up').addEventListener('click', () => onRatingClick(bar, replyId, 'up'));
+  bar.querySelector('.rating-btn.down').addEventListener('click', () => onRatingClick(bar, replyId, 'down'));
+  bar.querySelector('.share-btn').addEventListener('click', () => onShareClick(bar, replyId));
+}
+
+function applyRatingState(bar, rating) {
+  bar.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+  if (rating === 'up')   bar.querySelector('.rating-btn.up').classList.add('active');
+  if (rating === 'down') bar.querySelector('.rating-btn.down').classList.add('active');
+}
+
+function onRatingClick(bar, replyId, choice) {
+  const cached = loadRatingFromCache(replyId) || { rating: null, reason: '' };
+  const next = cached.rating === choice ? null : choice;
+
+  applyRatingState(bar, next);
+  saveRatingToCache(replyId, next, next === 'down' ? cached.reason : '');
+
+  // Remove any open reason panel when leaving the 'down' state
+  const oldPanel = bar.parentElement.querySelector('.rating-reason');
+  if (oldPanel) oldPanel.remove();
+
+  if (next === 'down') showReasonPanel(bar, replyId, cached.reason || '');
+
+  // Post-upvote nudge: show share hint once per browser until user dismisses it
+  if (next === 'up') {
+    let dismissed = false;
+    try { dismissed = !!localStorage.getItem('share-hint-dismissed'); } catch (e) {}
+    if (!dismissed) showShareHint(bar, replyId);
+  }
+
+  postRating(replyId, next, next === 'down' ? (cached.reason || '') : '');
+}
+
+function showReasonPanel(bar, replyId, initial) {
+  const existing = bar.parentElement.querySelector('.rating-reason');
+  if (existing) existing.remove();
+
+  const panel = document.createElement('div');
+  panel.className = 'rating-reason';
+  panel.innerHTML = `
+    <div class="hint">这个回答哪里不对？（可不填）</div>
+    <textarea maxlength="500" placeholder="比如：不像巴菲特的语气 / 事实不准确 / 答非所问 ..."></textarea>
+    <div class="actions">
+      <button type="button" class="skip">跳过</button>
+      <button type="button" class="submit">提交</button>
+    </div>
+  `;
+  bar.parentElement.appendChild(panel);
+
+  const ta = panel.querySelector('textarea');
+  ta.value = initial || '';
+  ta.focus();
+
+  panel.querySelector('.skip').addEventListener('click', () => {
+    saveRatingToCache(replyId, 'down', '');
+    postRating(replyId, 'down', '');
+    panel.remove();
+  });
+  panel.querySelector('.submit').addEventListener('click', () => {
+    const reason = ta.value.trim();
+    saveRatingToCache(replyId, 'down', reason);
+    postRating(replyId, 'down', reason);
+    panel.remove();
+  });
+}
+
+// ==================== Share ====================
+// Default: include the FULL answer so the image is self-contained (user can
+// just post to 小红书 etc. without friends needing to scan). The QR now
+// funnels friends to ASK their own question, not to read the remainder.
+// A safety ceiling kicks in only for pathologically long replies (>3000 chars)
+// to keep image height reasonable.
+const SHARE_TRUNCATE_AT = 3000;
+
+/** Build the share card's answer section from the bubble's rendered HTML.
+ *  Keeps markdown structure (blockquote, strong, headings, lists) so the
+ *  shared image looks like the website, not a wall of plain text. Truncates
+ *  to ~700 chars of innerText, preserving whole children, and appends a
+ *  "…… 扫码看完整回答" hint. */
+function buildShareAnswerDom(bubble) {
+  const src = document.createElement('div');
+  src.innerHTML = bubble.innerHTML;
+
+  // Strip interactive/irrelevant bits that would render weird on a static image
+  src.querySelectorAll('a.concept-link-auto').forEach(a => {
+    // unwrap the <a> but keep its text content (auto-linked concept words)
+    const text = document.createTextNode(a.textContent || '');
+    a.replaceWith(text);
+  });
+  src.querySelectorAll('.status, .streaming-status, .meta, .cursor').forEach(el => el.remove());
+
+  const full = src.innerText || '';
+  const answer = document.createElement('div');
+
+  if (full.length <= SHARE_TRUNCATE_AT) {
+    // No truncation: clone all children verbatim
+    while (src.firstChild) answer.appendChild(src.firstChild);
+    return answer;
+  }
+
+  // Truncated: walk top-level children, keep whole ones until budget runs out
+  let used = 0;
+  for (const child of Array.from(src.childNodes)) {
+    const text = (child.textContent || '');
+    if (used + text.length <= SHARE_TRUNCATE_AT) {
+      answer.appendChild(child.cloneNode(true));
+      used += text.length;
+    } else {
+      // Partial: if this is a text-bearing node and we still have budget,
+      // include a truncated clone
+      const remaining = SHARE_TRUNCATE_AT - used;
+      if (remaining > 40 && child.nodeType === Node.ELEMENT_NODE) {
+        const clone = child.cloneNode(true);
+        truncateElementText(clone, remaining);
+        answer.appendChild(clone);
+      }
+      break;
+    }
+  }
+
+  const hint = document.createElement('p');
+  hint.className = 'share-truncate-hint';
+  hint.textContent = '…… 扫码向巴菲特提问看完整回答';
+  answer.appendChild(hint);
+  return answer;
+}
+
+/** Truncate the cumulative text of an element tree to at most `budget`
+ *  characters, preserving element structure. Mutates the tree in place. */
+function truncateElementText(root, budget) {
+  let left = budget;
+  function walk(node) {
+    if (left <= 0) {
+      if (node.parentNode) node.parentNode.removeChild(node);
+      return;
+    }
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (node.textContent.length <= left) {
+        left -= node.textContent.length;
+      } else {
+        node.textContent = node.textContent.slice(0, left) + '……';
+        left = 0;
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      for (const c of Array.from(node.childNodes)) walk(c);
+    }
+  }
+  for (const c of Array.from(root.childNodes)) walk(c);
+}
+
+function buildShareCardDom(question, answerDom) {
+  const card = document.createElement('div');
+  card.className = 'share-card';
+  card.innerHTML = `
+    <div class="share-header">
+      <img class="share-logo" src="assets/tea-logo.png" alt="巴菲特下午茶">
+      <div>
+        <div class="share-brand">
+          <span>巴菲特下午茶</span>
+          <span class="share-site">learnbuffett.com</span>
+        </div>
+        <div class="share-tagline">和世界最伟大的投资者喝杯茶</div>
+      </div>
+    </div>
+    <div class="share-question"></div>
+    <div class="share-answer"></div>
+    <div class="share-footer">
+      <div class="share-qr"></div>
+      <div class="share-cta">
+        <div class="share-url">扫码向巴菲特提问</div>
+        <div class="share-scan">learnbuffett.com · 免费问答</div>
+      </div>
+    </div>
+  `;
+  card.querySelector('.share-question').textContent = 'Q：' + question;
+  const answerSlot = card.querySelector('.share-answer');
+  while (answerDom.firstChild) answerSlot.appendChild(answerDom.firstChild);
+  return card;
+}
+
+async function onShareClick(bar, replyId) {
+  const assistantWrap = bar.closest('.msg.assistant');
+  if (!assistantWrap) return;
+  const bubble = assistantWrap.querySelector('.bubble');
+  if (!bubble) return;
+  const prev = assistantWrap.previousElementSibling;
+  const question = (prev && prev.classList.contains('user'))
+    ? prev.querySelector('.bubble').innerText.trim()
+    : '';
+  if (!question || !bubble.innerText.trim()) return;
+  openShareModal(replyId, question, bubble);
+}
+
+async function openShareModal(replyId, question, bubble) {
+  const bg = document.getElementById('shareModalBg');
+  const modal = document.getElementById('shareModal');
+  modal.innerHTML = '<div class="loading">正在生成分享图…</div>';
+  bg.classList.add('show');
+
+  // Wait for CDN scripts (defer) to load
+  let tries = 0;
+  while ((typeof html2canvas === 'undefined' || typeof QRCode === 'undefined') && tries < 30) {
+    await new Promise(r => setTimeout(r, 100));
+    tries++;
+  }
+  if (typeof html2canvas === 'undefined' || typeof QRCode === 'undefined') {
+    modal.innerHTML = '<div class="loading">分享工具未能加载，请稍后重试。<br><button onclick="closeShareModal()" style="margin-top:8px;padding:6px 14px;border:none;border-radius:6px;background:#1a2332;color:#fff;cursor:pointer">关闭</button></div>';
+    return;
+  }
+
+  // QR points to the current origin so staging QR lands on staging (which
+  // has the share-hydrate logic) and prod QR lands on prod after deploy.
+  // The displayed URL text below is still the canonical learnbuffett.com brand.
+  const shareUrl = `${location.origin}/talk?q=${encodeURIComponent(question)}&r=${encodeURIComponent(replyId)}`;
+  const answerDom = buildShareAnswerDom(bubble);
+  const card = buildShareCardDom(question, answerDom);
+  document.body.appendChild(card);
+
+  try {
+    new QRCode(card.querySelector('.share-qr'), {
+      text: shareUrl, width: 180, height: 180,
+      colorDark: '#1a2332', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+
+    // Wait for the logo image to actually decode before capturing, else
+    // html2canvas may snapshot a blank area.
+    const logoImg = card.querySelector('.share-logo');
+    if (logoImg && !logoImg.complete) {
+      await new Promise((resolve) => {
+        logoImg.addEventListener('load', resolve, { once: true });
+        logoImg.addEventListener('error', resolve, { once: true });
+        setTimeout(resolve, 2000);  // hard cap — don't hang forever
+      });
+    }
+    await new Promise(r => requestAnimationFrame(r));
+    await new Promise(r => setTimeout(r, 50));
+
+    const canvas = await html2canvas(card, {
+      backgroundColor: '#fdfaf2',
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    });
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.92));
+    renderSharePreview(blob);
+  } catch (err) {
+    console.error('[share] generation failed:', err);
+    modal.innerHTML = '<div class="loading">生成失败，请重试。<br><button onclick="closeShareModal()" style="margin-top:8px;padding:6px 14px;border:none;border-radius:6px;background:#1a2332;color:#fff;cursor:pointer">关闭</button></div>';
+  } finally {
+    if (card.parentNode) card.parentNode.removeChild(card);
+  }
+}
+
+let _currentShareBlob = null;
+let _currentShareUrl = null;
+
+function renderSharePreview(blob) {
+  if (_currentShareUrl) URL.revokeObjectURL(_currentShareUrl);
+  _currentShareBlob = blob;
+  _currentShareUrl = URL.createObjectURL(blob);
+  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+
+  const modal = document.getElementById('shareModal');
+  modal.innerHTML = `
+    <h3>分享给朋友</h3>
+    <img class="preview-img" src="https://learnbuffett.com/talk/${_currentShareUrl}" alt="分享图预览">
+    ${isWeChat ? '<div class="wechat-note">微信内请<strong>长按图片</strong>保存到相册，再到聊天里发送。</div>' : ''}
+    <div class="actions">
+      <button class="close" onclick="closeShareModal()">关闭</button>
+      <button class="secondary" onclick="saveSharePng()">保存图片</button>
+      ${isWeChat ? '' : '<button class="primary" onclick="doShareBlob()">分享</button>'}
+    </div>
+  `;
+}
+
+async function doShareBlob() {
+  if (!_currentShareBlob) return;
+  const file = new File([_currentShareBlob], 'buffett-share.jpg', { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: '巴菲特下午茶' });
+      closeShareModal();
+      return;
+    } catch (e) { /* user cancel or unsupported; fall through to download */ }
+  }
+  saveSharePng();
+}
+
+function saveSharePng() {
+  if (!_currentShareUrl) return;
+  const a = document.createElement('a');
+  a.href = _currentShareUrl;
+  a.download = 'buffett-share.jpg';
+  a.click();
+}
+
+function closeShareModal() {
+  document.getElementById('shareModalBg').classList.remove('show');
+  if (_currentShareUrl) { URL.revokeObjectURL(_currentShareUrl); _currentShareUrl = null; }
+  _currentShareBlob = null;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('shareModalBg').classList.contains('show')) {
+    closeShareModal();
+  }
+});
+
+function showShareHint(bar, replyId) {
+  const existing = bar.parentElement.querySelector('.share-hint');
+  if (existing) existing.remove();
+
+  const shareBtn = bar.querySelector('.share-btn');
+  if (!shareBtn) return;
+
+  const hint = document.createElement('div');
+  hint.className = 'share-hint';
+  hint.innerHTML = `<span>喜欢就分享给朋友？</span><a class="hint-share">分享</a><a class="hint-close" aria-label="关闭">×</a>`;
+
+  const parent = bar.parentElement;
+  if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+  const shareRect = shareBtn.getBoundingClientRect();
+  const parentRect = parent.getBoundingClientRect();
+  hint.style.left = (shareRect.left - parentRect.left) + 'px';
+  hint.style.bottom = (parentRect.bottom - shareRect.top + 6) + 'px';
+  parent.appendChild(hint);
+
+  const cleanup = () => { if (hint.parentNode) hint.parentNode.removeChild(hint); };
+
+  hint.querySelector('.hint-share').addEventListener('click', () => {
+    cleanup();
+    onShareClick(bar, replyId);
+  });
+  hint.querySelector('.hint-close').addEventListener('click', () => {
+    try { localStorage.setItem('share-hint-dismissed', '1'); } catch (e) {}
+    cleanup();
+  });
+
+  // Auto-fade after 5s (without persisting dismissed)
+  setTimeout(() => {
+    if (!hint.parentNode) return;
+    hint.classList.add('fade-out');
+    setTimeout(cleanup, 300);
+  }, 5000);
+}
+</script>
+
+<div class="share-modal-bg" id="shareModalBg" onclick="if(event.target===this)closeShareModal()">
+  <div class="share-modal" id="shareModal">
+    <div class="loading">正在生成分享图…</div>
+  </div>
+</div>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8e93d0e80f9456280a3c041d2f04677"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>

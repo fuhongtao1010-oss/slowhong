@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赞赏支持 — 巴菲特致股东信知识库</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAF7F2;--bg2:#F3EDE4;--text:#1B1B18;--text2:#6B6560;
+  --gold:#B8860B;--gold-light:#D4A843;--gold-glow:rgba(184,134,11,.12);
+  --navy:#1A2332;--navy-light:#2C3E50;--cream:#FFF8EE;
+  --border:#E0D6C8;--card:#FFFFFF;
+  --serif:'Noto Serif SC','Crimson Pro',Georgia,'Times New Roman',serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--text);background:var(--bg);
+  display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+
+.donate-card{
+  max-width:420px;width:100%;background:var(--card);border-radius:20px;
+  border:1px solid var(--border);box-shadow:0 12px 48px rgba(0,0,0,.06);
+  overflow:hidden;text-align:center;position:relative;
+}
+.donate-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));
+}
+
+.donate-header{padding:36px 32px 0}
+.donate-logo{font-family:var(--serif);font-size:14px;color:var(--gold);
+  font-weight:700;letter-spacing:1px;margin-bottom:16px}
+.donate-title{font-family:var(--serif);font-size:22px;font-weight:900;
+  color:var(--navy);line-height:1.4;margin-bottom:12px}
+.donate-desc{font-size:14px;color:var(--text2);line-height:1.8;padding:0 8px}
+.donate-desc strong{color:var(--navy);font-weight:700}
+
+.qr-wrapper{padding:28px 32px 20px}
+.qr-frame{
+  display:inline-block;padding:12px;background:#fff;
+  border-radius:16px;border:2px solid var(--border);
+  box-shadow:0 4px 20px var(--gold-glow);
+  transition:all .3s;
+}
+.qr-frame:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(184,134,11,.18)}
+.qr-frame img{display:block;width:240px;height:240px;border-radius:8px}
+
+.donate-hint{font-size:13px;color:var(--text2);margin-top:12px;line-height:1.6}
+.donate-hint .wechat-icon{color:#07C160;font-weight:700}
+
+.donate-footer{
+  padding:20px 32px 28px;margin:0 24px;
+  border-top:1px solid var(--border);
+}
+.back-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--text2);text-decoration:none;
+  transition:all .2s;
+}
+.back-link:hover{color:var(--gold)}
+.back-link svg{width:14px;height:14px}
+
+.quote-box{
+  margin:20px 32px 0;padding:14px 20px;
+  background:var(--cream);border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;text-align:left;
+}
+.quote-box p{font-family:var(--serif);font-size:13px;color:#5C4813;
+  font-style:italic;line-height:1.7}
+.quote-box .quote-author{font-style:normal;font-size:12px;color:var(--text2);
+  margin-top:6px;text-align:right}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.donate-card{animation:fadeUp .5s ease forwards}
+</style>
+</head>
+<body>
+
+<div class="donate-card">
+  <div class="donate-header">
+    <div class="donate-logo">巴菲特致股东信知识库</div>
+    <h1 class="donate-title">感谢你的支持</h1>
+    <p class="donate-desc">
+      98 封信，70 年智慧，4000+ 条交叉引用，一个人从零搭建，免费开放。<br>
+      <strong>如果这个知识库帮到了你</strong>，请我喝杯咖啡吧。
+    </p>
+  </div>
+
+  <div class="quote-box">
+    <p>"我每天都是跳着踢踏舞去上班的。"</p>
+    <div class="quote-author">— 沃伦·巴菲特</div>
+  </div>
+
+  <div class="qr-wrapper">
+    <div class="qr-frame">
+      <img src="赞赏码.jpg" alt="微信赞赏码">
+    </div>
+    <p class="donate-hint">
+      <span class="wechat-icon">微信</span>扫一扫，金额随意
+    </p>
+  </div>
+
+  <div class="donate-footer">
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      返回知识库
+    </a>
+  </div>
+</div>
+
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8e93d0e80f9456280a3c041d2f04677"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>

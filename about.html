@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>邦比快跑 — 巴菲特知识库</title>
+<meta name="description" content="邦比快跑 · 一个对 AI 感到好奇的金融工作者。在做「价值投资三杰」：巴菲特知识库 · 查理·芒格的思维模型 · 阿段笔记。">
+<link rel="canonical" href="about.html">
+<meta property="og:title" content="邦比快跑 — 巴菲特知识库">
+<meta property="og:description" content="一个对 AI 感到好奇的金融工作者">
+<meta property="og:url" content="https://learnbuffett.com/about">
+<meta property="og:type" content="profile">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAF7F2;--bg2:#F3EDE4;--text:#1B1B18;--text2:#6B6560;--text3:#8A827B;
+  --gold:#B8860B;--gold-light:#D4A843;--gold-glow:rgba(184,134,11,.12);
+  --navy:#1A2332;--navy-light:#2C3E50;--cream:#FFF8EE;
+  --border:#E0D6C8;--border-light:#ECE4D6;--card:#FFFFFF;
+  --serif:'Noto Serif SC','Crimson Pro',Georgia,'Times New Roman',serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--text);background:var(--bg);line-height:1.7;
+  min-height:100vh;padding:0}
+
+.container{max-width:760px;margin:0 auto;padding:56px 28px 80px}
+
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px;font-size:13px}
+.top-bar a{color:var(--text2);text-decoration:none;transition:color .2s}
+.top-bar a:hover{color:var(--gold)}
+.top-bar .brand{font-family:var(--serif);font-weight:700;color:var(--navy);letter-spacing:.5px}
+
+.hero{text-align:center;padding:24px 0 48px;border-bottom:1px solid var(--border);margin-bottom:48px}
+.hero-eyebrow{font-family:var(--serif);font-size:12px;letter-spacing:3px;color:var(--gold);
+  text-transform:uppercase;font-weight:700;margin-bottom:18px}
+.hero-name{font-family:var(--serif);font-size:52px;font-weight:900;color:var(--navy);
+  line-height:1.1;margin-bottom:16px;letter-spacing:-.5px}
+.hero-name .dot{color:var(--gold)}
+.hero-tag{font-size:16px;color:var(--text2);font-style:italic;font-family:var(--serif);
+  max-width:520px;margin:0 auto}
+
+h2.section{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--navy);
+  margin:48px 0 20px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+h2.section::before{content:'§ ';color:var(--gold);font-weight:400}
+
+p.lead{font-size:16px;color:var(--text);margin-bottom:18px}
+p.body{font-size:15px;color:var(--text);margin-bottom:14px}
+p.body strong{color:var(--navy);font-weight:700}
+
+.origin-story{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 26px;margin-top:20px}
+.origin-story p{font-size:14.5px;margin-bottom:12px;color:var(--text)}
+.origin-story p:last-child{margin-bottom:0}
+.origin-story strong{color:var(--navy);font-weight:700}
+
+.social-links{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.social-row{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);
+  border:1px solid var(--border);border-radius:10px;text-decoration:none;color:inherit;transition:all .2s}
+.social-row:hover{border-color:var(--gold-light);transform:translateX(4px);box-shadow:0 4px 16px var(--gold-glow)}
+.social-row.no-url{cursor:default}
+.social-row.no-url:hover{transform:none;border-color:var(--border);box-shadow:none}
+.social-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;font-family:var(--serif);flex-shrink:0}
+.social-icon.zh{background:#E8F1FF;color:#0066FF}
+.social-icon.wb{background:#FFEBEE;color:#E6162D}
+.social-icon.wx{background:#E8F5E9;color:#07C160}
+.social-icon.x{background:#1B1B18;color:#fff}
+.social-body{flex:1;min-width:0}
+.social-title{font-size:14px;font-weight:700;color:var(--navy)}
+.social-sub{font-size:12px;color:var(--text3);font-family:Menlo,ui-monospace,monospace;
+  margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.social-sub.plain{font-family:var(--sans);color:var(--text2)}
+.social-arrow{color:var(--text3);font-size:14px;flex-shrink:0}
+.social-row:hover .social-arrow{color:var(--gold)}
+
+.matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}
+.site-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 18px;
+  text-decoration:none;color:inherit;transition:all .25s;position:relative;overflow:hidden;display:block}
+.site-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.site-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.08);border-color:var(--gold-light)}
+.site-num{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--gold);letter-spacing:1px}
+.site-title{font-family:var(--serif);font-size:20px;font-weight:900;color:var(--navy);margin:10px 0 4px}
+.site-domain{font-size:12px;color:var(--text3);font-family:Menlo,ui-monospace,monospace;margin-bottom:10px}
+.site-desc{font-size:13px;color:var(--text2);line-height:1.6}
+.site-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;
+  background:var(--bg2);color:var(--text2);letter-spacing:.5px;margin-top:10px}
+.site-badge.live{background:#E8F5E9;color:#2E7D32}
+.site-badge.beta{background:#FFF3E0;color:#E65100}
+
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;align-items:start}
+@media (max-width:640px){
+  .hero-name{font-size:40px}
+  .matrix{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .container{padding:32px 20px 60px}
+}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 20px;text-align:center}
+.contact-card h3{font-family:var(--serif);font-size:15px;color:var(--navy);font-weight:700;margin-bottom:12px}
+.contact-card img{width:180px;height:180px;border-radius:6px;border:1px solid var(--border-light);display:block;margin:0 auto 10px}
+.contact-card p{font-size:13px;color:var(--text2)}
+.contact-card strong{color:var(--navy);font-weight:700}
+
+.quote{background:var(--cream);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+  padding:18px 22px;margin:28px 0;font-family:var(--serif);font-style:italic;color:#5C4813;font-size:15px}
+.quote cite{display:block;margin-top:8px;font-style:normal;font-size:13px;color:var(--text2);text-align:right}
+
+.footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2)}
+.footer a{color:var(--text2);text-decoration:none;transition:color .2s}
+.footer a:hover{color:var(--gold)}
+
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-weight:600;font-size:14px;margin-top:24px}
+.back-link:hover{gap:10px;transition:gap .2s}
+
+ul.plain{list-style:none;margin:16px 0}
+ul.plain li{padding:8px 0;border-bottom:1px dashed var(--border-light);font-size:14px}
+ul.plain li:last-child{border-bottom:none}
+ul.plain li strong{color:var(--navy);font-weight:700;font-family:var(--serif)}
+ul.plain li .count{font-family:Menlo,ui-monospace,monospace;color:var(--gold);font-size:12px;margin-left:6px}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="top-bar">
+    <a href="index.html" class="brand">巴菲特知识库</a>
+    <a href="index.html">← 返回首页</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-eyebrow">About · 关于作者</div>
+    <h1 class="hero-name">邦比快跑<span class="dot">.</span></h1>
+    <p class="hero-tag">一个对 AI 感到好奇的金融工作者。</p>
+  </section>
+
+  <h2 class="section">我是谁</h2>
+
+  <div class="origin-story">
+    <p>大家好，我是<strong>邦比快跑</strong>，是一个对 <strong>AI</strong> 感到好奇的<strong>金融工作者</strong>。</p>
+    <p>这个巴菲特知识库就是我的一次实验：把巴菲特 70 年的<strong>致股东信</strong>（98 封）全部翻译、拆解、互链，做成一张可以一键溯源的<strong>知识图谱</strong>。一个人，从头到尾。</p>
+  </div>
+
+  <h2 class="section">在这里找到我</h2>
+
+  <div class="social-links">
+
+    <div class="social-row no-url" style="padding:18px;align-items:center;gap:18px">
+      <div class="social-icon wx">信</div>
+      <div class="social-body">
+        <div class="social-title">微信公众号 · 邦比读书</div>
+        <div class="social-sub plain">投资 · 阅读 · 认知升级 · 不定期更新<br>扫码右侧二维码即可关注</div>
+      </div>
+      <img src="qrcode.jpg" alt="邦比读书公众号二维码" style="width:120px;height:120px;border-radius:6px;flex-shrink:0;border:1px solid var(--border-light)">
+    </div>
+
+    <a href="https://www.zhihu.com/people/binbinmath" target="_blank" rel="noopener" class="social-row">
+      <div class="social-icon zh">知</div>
+      <div class="social-body">
+        <div class="social-title">知乎</div>
+        <div class="social-sub">zhihu.com/people/binbinmath</div>
+      </div>
+      <div class="social-arrow">↗</div>
+    </a>
+
+    <a href="https://weibo.com/n/binbinmath" target="_blank" rel="noopener" class="social-row">
+      <div class="social-icon wb">微</div>
+      <div class="social-body">
+        <div class="social-title">新浪微博</div>
+        <div class="social-sub">weibo.com/n/binbinmath</div>
+      </div>
+      <div class="social-arrow">↗</div>
+    </a>
+
+    <a href="https://x.com/binbinmath" target="_blank" rel="noopener" class="social-row">
+      <div class="social-icon x">𝕏</div>
+      <div class="social-body">
+        <div class="social-title">X (Twitter)</div>
+        <div class="social-sub">x.com/binbinmath</div>
+      </div>
+      <div class="social-arrow">↗</div>
+    </a>
+
+  </div>
+
+  <h2 class="section">价值投资三杰</h2>
+
+  <p class="body">我的目标不止一个知识库。我在沿着「<strong>原典 → 方法 → 实战</strong>」三条线，做一套相互呼应的价值投资建设：</p>
+
+  <div class="matrix">
+    <a href="index.html" target="_blank" rel="noopener" class="site-card">
+      <div class="site-num">01</div>
+      <div class="site-title">巴菲特知识库</div>
+      <div class="site-domain">learnbuffett.com</div>
+      <div class="site-desc">98 封致股东信 · 49 个投资概念 · 61 家公司 · 3,900+ 条交叉链接</div>
+      <span class="site-badge live">● 已上线</span>
+    </a>
+    <a href="https://mungermodels.com" target="_blank" rel="noopener" class="site-card">
+      <div class="site-num">02</div>
+      <div class="site-title">查理·芒格的思维模型</div>
+      <div class="site-domain">mungermodels.com</div>
+      <div class="site-desc">231 个思维模型 · 14 个学科 · 一张格栅</div>
+      <span class="site-badge beta">● 测试中</span>
+    </a>
+    <a href="https://learnduan.com" target="_blank" rel="noopener" class="site-card">
+      <div class="site-num">03</div>
+      <div class="site-title">阿段笔记</div>
+      <div class="site-domain">learnduan.com</div>
+      <div class="site-desc">段永平雪球笔记 + 投资问答全集，中文圈最硬的实战样本</div>
+      <span class="site-badge">● 建设中</span>
+    </a>
+  </div>
+
+  <p class="body">巴菲特讲<strong>案例</strong>；芒格讲<strong>方法论</strong>；段永平讲<strong>实战</strong>。三条线交织起来，就是我相信的价值投资的全景。</p>
+
+  <h2 class="section">这个知识库里有什么</h2>
+
+  <ul class="plain">
+    <li><strong>合伙人信</strong><span class="count">35 封</span>——1956–1970，巴菲特的青年时代</li>
+    <li><strong>伯克希尔股东信</strong><span class="count">60 封</span>——1965–2024，最完整的中文翻译</li>
+    <li><strong>特别信件</strong><span class="count">3 封</span>——包括芒格的两封重要思考</li>
+    <li><strong>核心投资概念</strong><span class="count">49 个</span>——内在价值、护城河、能力圈、安全边际……</li>
+    <li><strong>公司档案</strong><span class="count">61 家</span>——从喜诗糖果到苹果，每家公司的完整故事</li>
+    <li><strong>关键人物</strong><span class="count">7 位</span>——芒格、格雷厄姆、B 夫人、阿吉特……</li>
+    <li><strong>知识图谱</strong><span class="count">可视化</span>——219 节点 · 3,939+ 链接</li>
+    <li><strong>巴菲特下午茶</strong><span class="count">AI 问答</span>——向奥马哈的老先生请教，每个回答有原文溯源</li>
+  </ul>
+
+  <div class="quote">
+    "我要求自己每天睡觉时，都比早上起床时更聪明一点。"
+    <cite>— 查理·芒格</cite>
+  </div>
+
+  <h2 class="section">联系与支持</h2>
+
+  <p class="body">这个知识库对所有人<strong>免费开放</strong>。如果它帮到了你——</p>
+
+  <div style="display:flex;justify-content:center;margin-top:24px">
+    <div class="contact-card" style="max-width:320px;width:100%">
+      <h3>☕ 请我喝杯咖啡</h3>
+      <img src="赞赏码.jpg" alt="微信赞赏码">
+      <p>金额随意，心意到了就好</p>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-link">← 返回巴菲特知识库首页</a>
+
+  <div class="footer">
+    <div>© 2026 邦比快跑 · 巴菲特知识库</div>
+    <div>
+      <a href="donate.html">☕ 赞赏</a>&nbsp;·&nbsp;
+      <a href="changelog.html">更新日志</a>&nbsp;·&nbsp;
+      <a href="index.html">首页</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8e93d0e80f9456280a3c041d2f04677"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>

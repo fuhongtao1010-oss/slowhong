@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-04-29T03:06:55.379Z",
+  "source": "static-html-export",
+  "counts": {
+    "documents": 219,
+    "chunks": 1856,
+    "graphNodes": 219,
+    "graphEdges": 3937
+  },
+  "byType": {
+    "股东信": 60,
+    "公司": 61,
+    "概念": 49,
+    "索引": 4,
+    "合伙人信": 35,
+    "人物": 7,
+    "特别信件": 3
+  },
+  "chunking": {
+    "targetCharacters": 900,
+    "overlapCharacters": 0
+  },
+  "files": {
+    "documents": "documents.json",
+    "chunks": "chunks.json",
+    "graph": "graph.json",
+    "search": "search-index.json"
+  }
+}

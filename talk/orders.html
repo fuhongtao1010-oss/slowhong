@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>我的订单 — 巴菲特下午茶</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(180deg,#faf6ef 0%,#f5f0e6 100%);color:#1a2332;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto;padding:2rem 1rem}
+h1{font-family:'Noto Serif SC',Georgia,serif;font-size:1.4rem;color:#B8860B;margin-bottom:0.3rem}
+.subtitle{font-size:0.85rem;color:#666;margin-bottom:2rem}
+.back{display:inline-block;margin-bottom:1rem;color:#8B6914;text-decoration:none;font-size:0.9rem}
+.back:hover{text-decoration:underline}
+.query-box{background:#fff;border:1px solid #e0d5c0;border-radius:10px;padding:1rem;margin-bottom:1.5rem}
+.query-box label{font-size:0.8rem;color:#666;display:block;margin-bottom:0.4rem}
+.query-row{display:flex;gap:0.5rem}
+.query-row input{flex:1;padding:0.6rem 0.8rem;border:1px solid #d4c8b0;border-radius:6px;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem}
+.query-row button{padding:0.6rem 1.2rem;background:#B8860B;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600}
+.query-row button:hover{background:#9a7209}
+.orders{display:flex;flex-direction:column;gap:0.8rem}
+.order-card{background:#fff;border:1px solid #e0d5c0;border-radius:10px;padding:1rem}
+.order-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem;flex-wrap:wrap;gap:0.3rem}
+.order-meta{font-size:0.78rem;color:#888}
+.order-amount{font-family:'Noto Serif SC',Georgia,serif;font-weight:700;color:#B8860B}
+.status-tag{font-size:0.72rem;padding:2px 8px;border-radius:4px;font-weight:600;letter-spacing:0.5px}
+.status-paid{background:#d1f1e0;color:#2d6a4f}
+.status-pending{background:#fef3c7;color:#a06500}
+.status-failed,.status-expired{background:#e5e5e5;color:#888}
+.order-no{font-family:ui-monospace,Menlo,monospace;font-size:0.78rem;color:#555;user-select:all;word-break:break-all}
+.order-code{font-family:ui-monospace,Menlo,monospace;font-size:0.88rem;color:#8B6914;background:#faf6ef;padding:0.6rem 0.8rem;border-radius:6px;border:1px solid #e0d5c0;margin-top:0.6rem;user-select:all;letter-spacing:1px;font-weight:600;word-break:break-all}
+.order-actions{display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap}
+.btn-ghost{padding:0.4rem 0.8rem;background:transparent;border:1px solid #d4c8b0;border-radius:5px;cursor:pointer;font-size:0.78rem;color:#555}
+.btn-ghost:hover{border-color:#B8860B;color:#B8860B}
+.btn-primary{padding:0.4rem 0.8rem;background:#B8860B;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:0.78rem;font-weight:600}
+.btn-primary:hover{background:#9a7209}
+.empty{text-align:center;padding:3rem 1rem;color:#888;font-size:0.9rem}
+.loading{text-align:center;padding:2rem;color:#888}
+.error{background:#fee;color:#c33;padding:0.8rem;border-radius:6px;font-size:0.85rem;margin-bottom:1rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="../talk.html" class="back">← 返回对话</a>
+  <h1>我的订单</h1>
+  <p class="subtitle">最近 30 天的购买记录（本设备自动识别），也可按订单号跨设备查询。</p>
+
+  <div class="query-box">
+    <label>按订单号查询（跨设备 / 客服支持）</label>
+    <div class="query-row">
+      <input type="text" id="query-input" placeholder="BFxxx..." spellcheck="false" autocomplete="off">
+      <button id="query-btn">查询</button>
+    </div>
+    <div id="query-result" style="margin-top:0.8rem"></div>
+  </div>
+
+  <h2 style="font-size:1rem;color:#555;margin-bottom:0.8rem;font-family:'Noto Serif SC',serif">本设备订单</h2>
+  <div id="orders" class="orders"><div class="loading">加载中…</div></div>
+</div>
+
+<script>
+// Same-origin — /api/* is proxied to the worker by the Pages middleware.
+const API_BASE = '';
+
+// Must mirror /talk page's getOrCreateFingerprint EXACTLY — same key, same
+// hash — so orders bought on /talk are findable here.
+function getOrCreateFingerprint() {
+  const KEY = 'buffett_ai_fp_v1';
+  try {
+    const cached = localStorage.getItem(KEY);
+    if (cached && cached.length >= 4) return cached;
+  } catch { /* storage blocked — fall through */ }
+  const data = [
+    navigator.userAgent || '',
+    navigator.language || '',
+    (screen.width || 0) + 'x' + (screen.height || 0),
+    new Date().getTimezoneOffset(),
+    navigator.hardwareConcurrency || 0,
+    (navigator.platform || ''),
+  ].join('|');
+  let h = 5381;
+  for (let i = 0; i < data.length; i++) {
+    h = (((h << 5) + h) + data.charCodeAt(i)) | 0;
+  }
+  const fp = Math.abs(h).toString(36) + Math.random().toString(36).slice(2, 8);
+  try { localStorage.setItem(KEY, fp); } catch { /* ignore */ }
+  return fp;
+}
+// Defensive: strip anything Safari's Headers() validator might reject.
+// The server already runs the same sanitization, so a stripped value still
+// matches orders created by /talk.
+const FINGERPRINT = String(getOrCreateFingerprint()).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
+
+function fmtTime(ms) {
+  if (!ms) return '—';
+  const d = new Date(ms);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function statusLabel(s) {
+  return { paid: '已付款', pending: '等待支付', failed: '已失败', expired: '已过期' }[s] || s;
+}
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderOrderCard(o, isSingle = false) {
+  const codeBlock = o.code ? `
+    <div class="order-code">${esc(o.code)}</div>
+    <div class="order-actions">
+      <button class="btn-primary" onclick="copyCode('${esc(o.code)}', this)">复制密码条</button>
+    </div>` : '';
+  const pendingActions = o.status === 'pending' ? `
+    <div class="order-actions">
+      <a class="btn-ghost" href="https://learnbuffett.com/talk?o=${encodeURIComponent(o.order_no)}">继续支付</a>
+      <button class="btn-ghost" onclick="refreshOne('${esc(o.order_no)}', this)">立即核查</button>
+    </div>` : '';
+  return `
+    <div class="order-card">
+      <div class="order-header">
+        <div>
+          <div class="order-amount">¥${(o.amount_cny||0).toFixed(2)} · ${o.credits || 20} 次</div>
+          <div class="order-meta">${fmtTime(o.created_at)}${o.paid_at ? ' · 付款 ' + fmtTime(o.paid_at) : ''}</div>
+        </div>
+        <span class="status-tag status-${o.status}">${statusLabel(o.status)}</span>
+      </div>
+      <div class="order-no">${esc(o.order_no)}</div>
+      ${codeBlock}
+      ${pendingActions}
+    </div>`;
+}
+
+window.copyCode = (code, btn) => {
+  navigator.clipboard?.writeText(code).then(() => {
+    const old = btn.textContent;
+    btn.textContent = '已复制 ✓';
+    setTimeout(() => btn.textContent = old, 1500);
+  }).catch(() => alert('复制失败，手动选中即可:\n\n' + code));
+};
+
+window.refreshOne = async (orderNo, btn) => {
+  btn.disabled = true;
+  btn.textContent = '核查中…';
+  try {
+    const r = await fetch(`${API_BASE}/api/purchase/status?order_no=${encodeURIComponent(orderNo)}`, {
+      headers: { 'X-Fingerprint': FINGERPRINT },
+    });
+    const data = await r.json();
+    if (data.status === 'paid') {
+      alert(`订单已核对为已付款！${data.code ? '密码条：' + data.code : '刷新页面查看完整信息'}`);
+      loadOrders();
+    } else if (data.status === 'pending') {
+      alert('仍在等待支付确认，请几分钟后再试');
+    } else {
+      alert('订单状态：' + statusLabel(data.status));
+    }
+  } catch (e) {
+    alert('核查失败：' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '立即核查';
+  }
+};
+
+async function loadOrders() {
+  const el = document.getElementById('orders');
+  el.innerHTML = '<div class="loading">加载中…</div>';
+  try {
+    const r = await fetch(`${API_BASE}/api/purchase/my-orders`, {
+      headers: { 'X-Fingerprint': FINGERPRINT },
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const orders = data.orders || [];
+    if (!orders.length) {
+      el.innerHTML = '<div class="empty">本设备还没有订单。<br>第一次购买时，订单会自动出现在这里。</div>';
+      return;
+    }
+    el.innerHTML = orders.map(o => renderOrderCard(o)).join('');
+  } catch (e) {
+    console.error('[orders] loadOrders failed', e);
+    el.innerHTML = `<div class="error">加载失败：${esc(e && e.name ? e.name + ': ' : '')}${esc(e && e.message || String(e))}</div>`;
+  }
+}
+
+document.getElementById('query-btn').addEventListener('click', async () => {
+  const input = document.getElementById('query-input');
+  const out = document.getElementById('query-result');
+  const orderNo = input.value.trim();
+  if (!orderNo) { out.innerHTML = '<div class="error">请输入订单号</div>'; return; }
+  out.innerHTML = '<div class="loading">查询中…</div>';
+  try {
+    const r = await fetch(`${API_BASE}/api/purchase/status?order_no=${encodeURIComponent(orderNo)}`, {
+      headers: { 'X-Fingerprint': FINGERPRINT },
+    });
+    const data = await r.json();
+    if (data.status === 'not_found') {
+      out.innerHTML = '<div class="error">订单不存在。请检查订单号是否正确。</div>';
+      return;
+    }
+    out.innerHTML = renderOrderCard({
+      order_no: data.order_no || orderNo,
+      amount_cny: data.amount,
+      credits: data.credits,
+      status: data.status,
+      created_at: 0,
+      paid_at: null,
+      code: data.code || data.code_masked || null,
+    });
+  } catch (e) {
+    out.innerHTML = `<div class="error">查询失败：${esc(e.message)}</div>`;
+  }
+});
+
+loadOrders();
+</script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8e93d0e80f9456280a3c041d2f04677"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>
